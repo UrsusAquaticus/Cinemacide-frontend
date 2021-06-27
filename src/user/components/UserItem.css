@@ -1,6 +1,7 @@
 .user-item {
 	width: calc(45% - 2rem);
-	min-width: 17.5rem;
+	min-width: 15rem;
+	margin: 0.5rem;
 }
 
 .user-item a {
