@@ -1,0 +1,43 @@
+.visually-hidden {
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
+.searchbar__input {
+	height: 100%;
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	border-right: none;
+	font-size: larger;
+	width: 100%;
+	outline: none;
+}
+
+.searchbar__form,
+.searchbar__form button {
+	height: 2rem;
+}
+
+.searchbar__form button {
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
+
+.searchbar__form button {
+	color: white;
+	background-color: #161515;
+	border-left: none;
+	font-size: large;
+}
+
+.searchbar__form {
+	max-width: none;
+	width: 100%;
+	display: flex;
+	filter: drop-shadow(0.25rem 0.25rem 0.25rem black)
+}

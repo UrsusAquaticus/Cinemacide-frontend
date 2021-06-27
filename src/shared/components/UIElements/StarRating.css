@@ -1,0 +1,15 @@
+.star-container {
+	display: flex;
+	flex-direction: row;
+	padding: 0.25rem;
+	padding-left: 0;
+}
+
+.star {
+	max-height: 1rem;
+	padding-right: 0.1rem;
+}
+
+.light {
+	filter: invert() hue-rotate(120deg);
+}
