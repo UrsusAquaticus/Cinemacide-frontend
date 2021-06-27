@@ -63,7 +63,7 @@ const ReviewItem = (props) => {
 					can't be undone thereafter.
 				</p>
 			</Modal>
-			<li className="card-item">
+			<li>
 				{isLoading && <LoadingSpinner asOverlay />}
 				<div className="card-item__header horizontal">
 					{!props.compact && (

@@ -40,7 +40,7 @@ const MovieItem = (props) => {
 				</li>
 			)}
 			{!props.search && (
-				<li>
+				<li className="card-item">
 					<Card className="card-item__content">
 						<div className="card-item__header vertical">
 							<div className="horizontal bottom-line">

@@ -6,6 +6,7 @@
 	flex-wrap: wrap;
 	justify-content: center;
 	max-width: 60rem;
+	width: 100%;
 }
 
 .banner {
@@ -21,6 +22,6 @@
 
 @media (min-width: 800px) {
 	.card-list {
-		margin: 0.5rem 20%;
+		margin: 0.5rem auto;
 	}
 }
