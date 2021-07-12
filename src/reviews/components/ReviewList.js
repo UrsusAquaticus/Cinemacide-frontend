@@ -9,7 +9,7 @@ const ReviewList = (props) => {
 		return (
 			<div className="card-list center">
 				<Card>
-					<h2>No reviews found. Maybe create one?</h2>
+					<h2>No reviews found.</h2>
 				</Card>
 			</div>
 		);

@@ -9,7 +9,7 @@ const HoardList = (props) => {
 		return (
 			<div className="card-list center">
 				<Card>
-					<h2>No hoards found. Maybe create one?</h2>
+					<h2>No hoards found.</h2>
 				</Card>
 			</div>
 		);

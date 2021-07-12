@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
+import Card from "../../shared/components/UIElements/Card";
 
 import HoardList from "../components/HoardList";
 import { useHttpClient } from "../../shared/hooks/http-hook";
@@ -40,10 +41,14 @@ const UserHoards = () => {
 				</div>
 			)}
 			{!isLoading && loadedHoards && (
-				<HoardList
-					items={loadedHoards}
-					onDeleteHoard={hoardDeletedHandler}
-				/>
+				<div className="card-list center">
+					<Card>
+						<h2>Create a new hoard</h2>
+					</Card>
+				</div>
+			)}
+			{!isLoading && loadedHoards && (
+				<HoardList items={loadedHoards} onDeleteHoard={hoardDeletedHandler} />
 			)}
 		</React.Fragment>
 	);

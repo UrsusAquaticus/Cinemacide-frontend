@@ -8,6 +8,7 @@ import {
 
 import LoadingSpinner from "./shared/components/UIElements/LoadingSpinner";
 import MainNavigation from "./shared/components/Navigation/MainNavigation";
+import Footer from "./shared/components/Navigation/Footer";
 import { AuthContext } from "./shared/context/auth-context";
 import { useAuth } from "./shared/hooks/auth-hook";
 
@@ -126,6 +127,7 @@ const App = () => {
 						{routes}
 					</Suspense>
 				</main>
+				<Footer />
 			</Router>
 		</AuthContext.Provider>
 	);
