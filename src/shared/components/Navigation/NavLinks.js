@@ -15,6 +15,11 @@ const NavLinks = (props) => {
 				</NavLink>
 			</li>
 			<li>
+				<NavLink to="/collections" exact>
+					Collections
+				</NavLink>
+			</li>
+			<li>
 				<NavLink to="/" exact>
 					Reviews
 				</NavLink>

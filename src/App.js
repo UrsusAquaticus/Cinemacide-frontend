@@ -19,6 +19,11 @@ const NewReview = React.lazy(() => import("./reviews/pages/NewReview"));
 const UserReviews = React.lazy(() => import("./reviews/pages/UserReviews"));
 const UpdateReview = React.lazy(() => import("./reviews/pages/UpdateReview"));
 
+const Collections = React.lazy(() => import("./collections/pages/Collections"));
+const NewCollection = React.lazy(() => import("./collections/pages/NewCollection"));
+const UserCollections = React.lazy(() => import("./collections/pages/UserCollections"));
+const UpdateCollection = React.lazy(() => import("./collections/pages/UpdateCollection"));
+
 const Movie = React.lazy(() => import("./movies/pages/Movie"));
 const MovieResults = React.lazy(() => import("./movies/pages/MovieResults"));
 
@@ -45,11 +50,20 @@ const App = () => {
 				<Route path="/:userId/reviews" exact>
 					<UserReviews />
 				</Route>
+				<Route path="/:userId/collections" exact>
+					<UserCollections />
+				</Route>
 				<Route path="/reviews/:movieId/new" exact>
 					<NewReview />
 				</Route>
+				<Route path="/collections/:movieId/new" exact>
+					<NewCollection />
+				</Route>
 				<Route path="/reviews/:reviewId">
 					<UpdateReview />
+				</Route>
+				<Route path="/collections/:collectionId">
+					<UpdateCollection />
 				</Route>
 				<Redirect to="/" />
 			</Switch>
@@ -71,6 +85,9 @@ const App = () => {
 				</Route>
 				<Route path="/:userId/reviews" exact>
 					<UserReviews />
+				</Route>
+				<Route path="/:userId/collections" exact>
+					<UserCollections />
 				</Route>
 				<Route path="/auth">
 					<Auth />
