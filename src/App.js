@@ -41,6 +41,9 @@ const App = () => {
 				<Route path="/users" exact>
 					<Users />
 				</Route>
+				<Route path="/collections" exact>
+					<Collections />
+				</Route>
 				<Route path="/movies/search/:title" exact>
 					<MovieResults />
 				</Route>
@@ -76,6 +79,9 @@ const App = () => {
 				</Route>
 				<Route path="/users" exact>
 					<Users />
+				</Route>
+				<Route path="/collections" exact>
+					<Collections />
 				</Route>
 				<Route path="/movies/search/:title" exact>
 					<MovieResults />
