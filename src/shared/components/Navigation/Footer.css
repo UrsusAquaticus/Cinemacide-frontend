@@ -2,6 +2,7 @@
 	width: 100%;
 	height: 3rem;
 	display: flex;
+	flex-direction: row-reverse;
 	align-items: center;
 	position: fixed;
 	bottom: 0;

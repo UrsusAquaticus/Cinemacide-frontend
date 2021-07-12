@@ -60,7 +60,7 @@ const App = () => {
 				<Route path="/reviews/:movieId/new" exact>
 					<NewReview />
 				</Route>
-				<Route path="/hoards/:movieId/new" exact>
+				<Route path="/hoards/new" exact>
 					<NewHoard />
 				</Route>
 				<Route path="/reviews/:reviewId">
@@ -127,7 +127,7 @@ const App = () => {
 						{routes}
 					</Suspense>
 				</main>
-				<Footer />
+				{/* <Footer /> */}
 			</Router>
 		</AuthContext.Provider>
 	);

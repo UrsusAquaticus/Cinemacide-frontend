@@ -4,9 +4,12 @@ import { useParams } from "react-router-dom";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import Card from "../../shared/components/UIElements/Card";
+import TagImage from "../../shared/components/UIElements/TagImage";
+import { Link } from "react-router-dom";
 
 import HoardList from "../components/HoardList";
 import { useHttpClient } from "../../shared/hooks/http-hook";
+import { AuthContext } from "../../shared/context/auth-context";
 
 const UserHoards = () => {
 	const userId = useParams().userId;
@@ -43,7 +46,18 @@ const UserHoards = () => {
 			{!isLoading && loadedHoards && (
 				<div className="card-list center">
 					<Card>
-						<h2>Create a new hoard</h2>
+						<Link
+							to={`/hoards/new/`}
+							style={{
+								textDecoration: "none",
+							}}
+						>
+							<TagImage
+								imgClass="invert"
+								tag="Create a new Hoard."
+								image="/svg/add-2.svg"
+							/>
+						</Link>
 					</Card>
 				</div>
 			)}
