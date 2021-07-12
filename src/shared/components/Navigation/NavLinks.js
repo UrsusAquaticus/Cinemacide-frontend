@@ -19,6 +19,11 @@ const NavLinks = (props) => {
 					Hoards
 				</NavLink>
 			</li>
+			{auth.isLoggedIn && (
+				<li>
+					<NavLink to={`/${auth.userId}/hoards`}>My Hoards</NavLink>
+				</li>
+			)}
 			<li>
 				<NavLink to="/" exact>
 					Reviews
