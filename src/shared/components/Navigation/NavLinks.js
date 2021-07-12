@@ -15,8 +15,8 @@ const NavLinks = (props) => {
 				</NavLink>
 			</li>
 			<li>
-				<NavLink to="/collections" exact>
-					Collections
+				<NavLink to="/hoards" exact>
+					Hoards
 				</NavLink>
 			</li>
 			<li>

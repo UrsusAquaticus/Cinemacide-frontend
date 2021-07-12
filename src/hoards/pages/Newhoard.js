@@ -16,7 +16,7 @@ import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
 import "../../shared/components/UIElements/CardList.css";
 
-const NewCollection = () => {
+const NewHoard = () => {
 	const movieId = useParams().movieId;
 	const auth = useContext(AuthContext);
 	const [loadedMovie, setLoadedMovie] = useState();
@@ -50,11 +50,11 @@ const NewCollection = () => {
 
 	const history = useHistory();
 
-	const collectionSubmitHandler = async (event) => {
+	const hoardSubmitHandler = async (event) => {
 		event.preventDefault();
 		try {
 			await sendRequest(
-				`${process.env.REACT_APP_BACKEND_URL}/collections`,
+				`${process.env.REACT_APP_BACKEND_URL}/hoards`,
 				"POST",
 				JSON.stringify({
 					imdbID: movieId,
@@ -78,7 +78,7 @@ const NewCollection = () => {
 			<ErrorModal error={error} onClear={clearError} />
 			<div className="card-list">
 				<Card className="card-item__content vertical">
-					<form onSubmit={collectionSubmitHandler}>
+					<form onSubmit={hoardSubmitHandler}>
 						{!isLoading && loadedMovie && <h2>{loadedMovie.Title}</h2>}
 						{isLoading && <LoadingSpinner asOverlay />}
 						{/* Replace with a better rating input */}
@@ -100,7 +100,7 @@ const NewCollection = () => {
 							onInput={inputHandler}
 						/>
 						<Button type="submit" disabled={!formState.isValid}>
-							ADD COLLECTION
+							ADD HOARD
 						</Button>
 					</form>
 				</Card>
@@ -109,4 +109,4 @@ const NewCollection = () => {
 	);
 };
 
-export default NewCollection;
+export default NewHoard;

@@ -10,7 +10,7 @@ import Attribute from "../../shared/components/UIElements/Attribute";
 import { AuthContext } from "../../shared/context/auth-context";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 
-const CollectionItem = (props) => {
+const HoardItem = (props) => {
 	const auth = useContext(AuthContext);
 	const [showConfirmModal, setShowConfirmModal] = useState(false);
 	const { isLoading, error, sendRequest, clearError } = useHttpClient();
@@ -28,7 +28,7 @@ const CollectionItem = (props) => {
 		setShowConfirmModal(false);
 		try {
 			await sendRequest(
-				`${process.env.REACT_APP_BACKEND_URL}/collections/${props.id}`,
+				`${process.env.REACT_APP_BACKEND_URL}/hoards/${props.id}`,
 				"DELETE",
 				null,
 				{
@@ -59,7 +59,7 @@ const CollectionItem = (props) => {
 				}
 			>
 				<p>
-					Do you want to proceed and delete this collection? Please note that it
+					Do you want to proceed and delete this hoard? Please note that it
 					can't be undone thereafter.
 				</p>
 			</Modal>
@@ -87,13 +87,13 @@ const CollectionItem = (props) => {
 							/>
 							<Attribute
 								className="divide"
-								to={`/${props.Creator}/collections`}
+								to={`/${props.Creator}/hoards`}
 								attribute={"By " + props.Username}
 							/>
 							{auth.userId === props.Creator && (
 								<Attribute
 									className="divide"
-									to={`/collections/${props.id}`}
+									to={`/hoards/${props.id}`}
 									attribute={"Edit"}
 								/>
 							)}
@@ -116,4 +116,4 @@ const CollectionItem = (props) => {
 	);
 };
 
-export default CollectionItem;
+export default HoardItem;

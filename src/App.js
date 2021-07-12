@@ -19,10 +19,10 @@ const NewReview = React.lazy(() => import("./reviews/pages/NewReview"));
 const UserReviews = React.lazy(() => import("./reviews/pages/UserReviews"));
 const UpdateReview = React.lazy(() => import("./reviews/pages/UpdateReview"));
 
-const Collections = React.lazy(() => import("./collections/pages/Collections"));
-const NewCollection = React.lazy(() => import("./collections/pages/NewCollection"));
-const UserCollections = React.lazy(() => import("./collections/pages/UserCollections"));
-const UpdateCollection = React.lazy(() => import("./collections/pages/UpdateCollection"));
+const Hoards = React.lazy(() => import("./hoards/pages/Hoards"));
+const NewHoard = React.lazy(() => import("./hoards/pages/NewHoard"));
+const UserHoards = React.lazy(() => import("./hoards/pages/UserHoards"));
+const UpdateHoard = React.lazy(() => import("./hoards/pages/UpdateHoard"));
 
 const Movie = React.lazy(() => import("./movies/pages/Movie"));
 const MovieResults = React.lazy(() => import("./movies/pages/MovieResults"));
@@ -41,8 +41,8 @@ const App = () => {
 				<Route path="/users" exact>
 					<Users />
 				</Route>
-				<Route path="/collections" exact>
-					<Collections />
+				<Route path="/hoards" exact>
+					<Hoards />
 				</Route>
 				<Route path="/movies/search/:title" exact>
 					<MovieResults />
@@ -53,20 +53,20 @@ const App = () => {
 				<Route path="/:userId/reviews" exact>
 					<UserReviews />
 				</Route>
-				<Route path="/:userId/collections" exact>
-					<UserCollections />
+				<Route path="/:userId/hoards" exact>
+					<UserHoards />
 				</Route>
 				<Route path="/reviews/:movieId/new" exact>
 					<NewReview />
 				</Route>
-				<Route path="/collections/:movieId/new" exact>
-					<NewCollection />
+				<Route path="/hoards/:movieId/new" exact>
+					<NewHoard />
 				</Route>
 				<Route path="/reviews/:reviewId">
 					<UpdateReview />
 				</Route>
-				<Route path="/collections/:collectionId">
-					<UpdateCollection />
+				<Route path="/hoards/:hoardId">
+					<UpdateHoard />
 				</Route>
 				<Redirect to="/" />
 			</Switch>
@@ -80,8 +80,8 @@ const App = () => {
 				<Route path="/users" exact>
 					<Users />
 				</Route>
-				<Route path="/collections" exact>
-					<Collections />
+				<Route path="/hoards" exact>
+					<Hoards />
 				</Route>
 				<Route path="/movies/search/:title" exact>
 					<MovieResults />
@@ -92,8 +92,8 @@ const App = () => {
 				<Route path="/:userId/reviews" exact>
 					<UserReviews />
 				</Route>
-				<Route path="/:userId/collections" exact>
-					<UserCollections />
+				<Route path="/:userId/hoards" exact>
+					<UserHoards />
 				</Route>
 				<Route path="/auth">
 					<Auth />

@@ -4,30 +4,30 @@ import { useParams } from "react-router-dom";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 
-import CollectionList from "../components/CollectionList";
+import HoardList from "../components/HoardList";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 
-const UserCollections = () => {
+const UserHoards = () => {
 	const userId = useParams().userId;
-	const [loadedCollections, setLoadedCollections] = useState();
+	const [loadedHoards, setLoadedHoards] = useState();
 	const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
 	useEffect(() => {
-		const fetchCollections = async () => {
+		const fetchHoards = async () => {
 			try {
 				const responseData = await sendRequest(
-					`${process.env.REACT_APP_BACKEND_URL}/collections/user/${userId}`
+					`${process.env.REACT_APP_BACKEND_URL}/hoards/user/${userId}`
 				);
-				console.log(responseData.collections);
-				setLoadedCollections(responseData.collections);
+				console.log(responseData.hoards);
+				setLoadedHoards(responseData.hoards);
 			} catch (err) {}
 		};
-		fetchCollections();
+		fetchHoards();
 	}, [sendRequest, userId]);
 
-	const collectionDeletedHandler = (deletedCollectionId) => {
-		setLoadedCollections((prevCollections) =>
-			prevCollections.filter((collection) => collection.id !== deletedCollectionId)
+	const hoardDeletedHandler = (deletedHoardId) => {
+		setLoadedHoards((prevHoards) =>
+			prevHoards.filter((hoard) => hoard.id !== deletedHoardId)
 		);
 	};
 
@@ -39,14 +39,14 @@ const UserCollections = () => {
 					<LoadingSpinner />
 				</div>
 			)}
-			{!isLoading && loadedCollections && (
-				<CollectionList
-					items={loadedCollections}
-					onDeleteCollection={collectionDeletedHandler}
+			{!isLoading && loadedHoards && (
+				<HoardList
+					items={loadedHoards}
+					onDeleteHoard={hoardDeletedHandler}
 				/>
 			)}
 		</React.Fragment>
 	);
 };
 
-export default UserCollections;
+export default UserHoards;

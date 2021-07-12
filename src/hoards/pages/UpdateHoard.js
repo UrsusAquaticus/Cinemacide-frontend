@@ -14,10 +14,10 @@ import { useForm } from "../../shared/hooks/form-hook";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
 
-const UpdateCollection = () => {
+const UpdateHoard = () => {
 	const auth = useContext(AuthContext);
-	const collectionId = useParams().collectionId;
-	const [loadedCollection, setLoadedCollection] = useState();
+	const hoardId = useParams().hoardId;
+	const [loadedHoard, setLoadedHoard] = useState();
 	const { isLoading, error, sendRequest, clearError } = useHttpClient();
 	const history = useHistory();
 
@@ -36,12 +36,12 @@ const UpdateCollection = () => {
 	);
 
 	useEffect(() => {
-		const fetchCollection = async () => {
+		const fetchHoard = async () => {
 			try {
 				const responseData = await sendRequest(
-					`${process.env.REACT_APP_BACKEND_URL}/collections/${collectionId}`
+					`${process.env.REACT_APP_BACKEND_URL}/hoards/${hoardId}`
 				);
-				setLoadedCollection(responseData.collection);
+				setLoadedHoard(responseData.hoard);
 				setFormData(
 					{
 						rating: {
@@ -57,14 +57,14 @@ const UpdateCollection = () => {
 				);
 			} catch (err) {}
 		};
-		fetchCollection();
-	}, [sendRequest, collectionId, setFormData]);
+		fetchHoard();
+	}, [sendRequest, hoardId, setFormData]);
 
-	const collectionUpdateSubmitHandler = async (event) => {
+	const hoardUpdateSubmitHandler = async (event) => {
 		event.preventDefault();
 		try {
 			await sendRequest(
-				`${process.env.REACT_APP_BACKEND_URL}/collections/${collectionId}`,
+				`${process.env.REACT_APP_BACKEND_URL}/hoards/${hoardId}`,
 				"PATCH",
 				JSON.stringify({
 					rating: formState.inputs.rating.value,
@@ -75,7 +75,7 @@ const UpdateCollection = () => {
 					Authorization: "Bearer " + auth.token,
 				}
 			);
-			history.push(`/${auth.userId}/collections`);
+			history.push(`/${auth.userId}/hoards`);
 		} catch (err) {}
 	};
 
@@ -87,11 +87,11 @@ const UpdateCollection = () => {
 		);
 	}
 
-	if (!loadedCollection && !error) {
+	if (!loadedHoard && !error) {
 		return (
 			<div className="center">
 				<Card>
-					<h2>Could not find collection!</h2>
+					<h2>Could not find hoard!</h2>
 				</Card>
 			</div>
 		);
@@ -100,11 +100,11 @@ const UpdateCollection = () => {
 	return (
 		<React.Fragment>
 			<ErrorModal error={error} onClear={clearError} />
-			{!isLoading && loadedCollection && (
+			{!isLoading && loadedHoard && (
 				<div className="card-list">
 					<Card className="card-item__content vertical">
-						<form className="collection-form" onSubmit={collectionUpdateSubmitHandler}>
-							<h2>{loadedCollection.title}</h2>
+						<form className="hoard-form" onSubmit={hoardUpdateSubmitHandler}>
+							<h2>{loadedHoard.title}</h2>
 							<Input
 								id="rating"
 								element="input"
@@ -113,7 +113,7 @@ const UpdateCollection = () => {
 								validators={[VALIDATOR_REQUIRE()]}
 								errorText="Please enter a valid rating."
 								onInput={inputHandler}
-								initialValue={loadedCollection.rating}
+								initialValue={loadedHoard.rating}
 								initialValid={true}
 							/>
 							<Input
@@ -123,11 +123,11 @@ const UpdateCollection = () => {
 								validators={[VALIDATOR_MINLENGTH(5)]}
 								errorText="Please enter a valid comment (min. 5 characters)."
 								onInput={inputHandler}
-								initialValue={loadedCollection.comment}
+								initialValue={loadedHoard.comment}
 								initialValid={true}
 							/>
 							<Button type="submit" disabled={!formState.isValid}>
-								UPDATE COLLECTION
+								UPDATE HOARD
 							</Button>
 						</form>
 					</Card>
@@ -137,4 +137,4 @@ const UpdateCollection = () => {
 	);
 };
 
-export default UpdateCollection;
+export default UpdateHoard;
