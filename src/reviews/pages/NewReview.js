@@ -62,7 +62,6 @@ const NewReview = () => {
 					poster: loadedMovie.Poster,
 					rating: formState.inputs.rating.value,
 					comment: formState.inputs.comment.value,
-					creator: auth.userId,
 				}),
 				{
 					"Content-Type": "application/json",

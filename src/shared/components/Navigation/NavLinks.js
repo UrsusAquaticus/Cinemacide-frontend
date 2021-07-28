@@ -1,50 +1,90 @@
 import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
+import { makeStyles, ListItem } from "@material-ui/core";
 
 import { AuthContext } from "../../context/auth-context";
-import "./NavLinks.css";
+
+const useStyles = makeStyles((theme) => ({
+	navLinks: {
+		display: "flex",
+		justifyContent: "center",
+		alignItems: "center",
+		maxHeight: "2rem",
+		whiteSpace: "nowrap",
+		width: "auto",
+		"&.active": {
+			background: theme.palette.secondary.main,
+		  },
+	},
+}));
 
 const NavLinks = (props) => {
 	const auth = useContext(AuthContext);
+	const classes = useStyles();
+
+	const LinkRef = React.forwardRef((props, ref) => (
+		<div ref={ref}>
+			<NavLink exact {...props} />
+		</div>
+	));
 
 	return (
-		<ul className="nav-links">
-			<li>
-				<NavLink to="/users" exact>
-					Users
-				</NavLink>
-			</li>
-			<li>
-				<NavLink to="/hoards" exact>
-					Hoards
-				</NavLink>
-			</li>
+		<React.Fragment>
+			{/* <ListItem
+				button
+				className={classes.navLinks}
+				component={LinkRef}
+				to="/users"
+			>
+				Users
+			</ListItem> */}
+			{/* <ListItem
+				button
+				className={classes.navLinks}
+				component={LinkRef}
+				to="/hoards"
+			>
+				Hoards
+			</ListItem> */}
 			{auth.isLoggedIn && (
-				<li>
-					<NavLink to={`/${auth.userId}/hoards`}>My Hoards</NavLink>
-				</li>
+				<ListItem
+					button
+					className={classes.navLinks}
+					component={LinkRef}
+					to={`/${auth.userId}/hoards`}
+				>
+					My Hoards
+				</ListItem>
 			)}
-			<li>
-				<NavLink to="/" exact>
-					Reviews
-				</NavLink>
-			</li>
-			{auth.isLoggedIn && (
-				<li>
-					<NavLink to={`/${auth.userId}/reviews`}>My Reviews</NavLink>
-				</li>
-			)}
+			{/* <ListItem button className={classes.navLinks} component={LinkRef} to="/">
+				Reviews
+			</ListItem> */}
+			{/* {auth.isLoggedIn && (
+				<ListItem
+					button
+					className={classes.navLinks}
+					component={LinkRef}
+					to={`/${auth.userId}/reviews`}
+				>
+					My Reviews
+				</ListItem>
+			)} */}
 			{!auth.isLoggedIn && (
-				<li>
-					<NavLink to="/auth">Login</NavLink>
-				</li>
+				<ListItem
+					button
+					className={classes.navLinks}
+					component={LinkRef}
+					to="/auth"
+				>
+					Login
+				</ListItem>
 			)}
 			{auth.isLoggedIn && (
-				<li>
-					<a onClick={auth.logout}>Logout</a>
-				</li>
+				<ListItem button className={classes.navLinks} onClick={auth.logout}>
+					Logout
+				</ListItem>
 			)}
-		</ul>
+		</React.Fragment>
 	);
 };
 

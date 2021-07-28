@@ -6,9 +6,11 @@ import {
 	Switch,
 } from "react-router-dom";
 
+import { ThemeProvider } from "@material-ui/styles";
+import { headerTheme } from "./themes";
+
 import LoadingSpinner from "./shared/components/UIElements/LoadingSpinner";
-import MainNavigation from "./shared/components/Navigation/MainNavigation";
-import Footer from "./shared/components/Navigation/Footer";
+import PrimarySearchAppBar from "./shared/components/Navigation/PrimarySearchAppBar";
 import { AuthContext } from "./shared/context/auth-context";
 import { useAuth } from "./shared/hooks/auth-hook";
 
@@ -37,13 +39,13 @@ const App = () => {
 		routes = (
 			<Switch>
 				<Route path="/" exact>
-					<Reviews />
+					<Hoards />
 				</Route>
 				<Route path="/users" exact>
 					<Users />
 				</Route>
-				<Route path="/hoards" exact>
-					<Hoards />
+				<Route path="/reviews" exact>
+					<Reviews />
 				</Route>
 				<Route path="/movies/search/:title" exact>
 					<MovieResults />
@@ -115,19 +117,20 @@ const App = () => {
 			}}
 		>
 			<Router>
-				<MainNavigation />
-				<main>
-					<Suspense
-						fallback={
-							<div className="center">
-								<LoadingSpinner />
-							</div>
-						}
-					>
-						{routes}
-					</Suspense>
-				</main>
-				{/* <Footer /> */}
+				<ThemeProvider theme={headerTheme}>
+					<PrimarySearchAppBar />
+					<main>
+						<Suspense
+							fallback={
+								<div className="center">
+									<LoadingSpinner />
+								</div>
+							}
+						>
+							{routes}
+						</Suspense>
+					</main>
+				</ThemeProvider>
 			</Router>
 		</AuthContext.Provider>
 	);

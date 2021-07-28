@@ -5,6 +5,7 @@ import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import Card from "../../shared/components/UIElements/Card";
 
+import MoviesList from "../components/MoviesList";
 import ReviewList from "../../reviews/components/ReviewList";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 
@@ -70,6 +71,7 @@ const Movie = () => {
 				</div>
 			)}
 
+			{!isLoading && loadedMovie && <MoviesList items={loadedMovie} />}
 
 			{!isLoading && loadedReviews && (
 				<ReviewList

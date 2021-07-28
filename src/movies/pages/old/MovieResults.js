@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { CircularProgress } from "@material-ui/core";
 
-import MovieDialog from "../components/MovieDialog";
-import MovieList from "../components/MovieList";
-import HoardSelectDialog from "../components/HoardSelectDialog";
-import HoardCreateDialog from "../components/HoardCreateDialog";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import Card from "../../shared/components/UIElements/Card";
 
+import MoviesList from "../components/MoviesList";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 
 const Movies = () => {
@@ -30,15 +29,21 @@ const Movies = () => {
 
 	return (
 		<React.Fragment>
-			{isLoading && !loadedMovies && <CircularProgress />}
-			{loadedMovies && (
-				<HoardCreateDialog>
-					<HoardSelectDialog>
-						<MovieDialog>
-							<MovieList loadedMovies={loadedMovies} />
-						</MovieDialog>
-					</HoardSelectDialog>
-				</HoardCreateDialog>
+			<ErrorModal error={error} onClear={clearError} />
+			{isLoading && (
+				<div className="center">
+					<LoadingSpinner />
+				</div>
+			)}
+			{!isLoading && loadedMovies && (
+				<MoviesList items={loadedMovies} search={searchTitle} />
+			)}
+			{!isLoading && !loadedMovies && (
+				<div className="movie-list center">
+					<Card>
+						<h2>No results for "{searchTitle}"</h2>
+					</Card>
+				</div>
 			)}
 		</React.Fragment>
 	);

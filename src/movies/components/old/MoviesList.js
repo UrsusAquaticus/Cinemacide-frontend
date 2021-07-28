@@ -1,20 +1,13 @@
 import React from "react";
 
-import Card from "../../shared/components/UIElements/Card";
-import MovieItem from "./MovieItem";
+import Card from "../../../shared/components/UIElements/Card";
+import MovieItem from "../MovieItem";
 import "../../shared/components/UIElements/CardList.css";
 
 const MovieList = (props) => {
 	return (
 		<React.Fragment>
 			<ul className="card-list">
-				{props.search && (
-					<li className="banner">
-						<Card>
-							<h2>Search results for "{props.search}"</h2>
-						</Card>
-					</li>
-				)}
 				{props.items.map((movie) => (
 					<MovieItem
 						search={props.search}
