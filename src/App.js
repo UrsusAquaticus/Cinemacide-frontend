@@ -9,8 +9,9 @@ import {
 import { ThemeProvider } from "@material-ui/styles";
 import { headerTheme } from "./themes";
 
-import LoadingSpinner from "./shared/components/UIElements/LoadingSpinner";
 import PrimarySearchAppBar from "./shared/components/Navigation/PrimarySearchAppBar";
+import { CircularProgress } from "@material-ui/core";
+
 import { AuthContext } from "./shared/context/auth-context";
 import { useAuth } from "./shared/hooks/auth-hook";
 
@@ -18,14 +19,11 @@ const Users = React.lazy(() => import("./user/pages/Users"));
 const Auth = React.lazy(() => import("./user/pages/Auth"));
 
 const Reviews = React.lazy(() => import("./reviews/pages/Reviews"));
-const NewReview = React.lazy(() => import("./reviews/pages/NewReview"));
 const UserReviews = React.lazy(() => import("./reviews/pages/UserReviews"));
-const UpdateReview = React.lazy(() => import("./reviews/pages/UpdateReview"));
+const HoardReviews = React.lazy(() => import("./reviews/pages/HoardReviews"));
 
 const Hoards = React.lazy(() => import("./hoards/pages/Hoards"));
-const NewHoard = React.lazy(() => import("./hoards/pages/NewHoard"));
 const UserHoards = React.lazy(() => import("./hoards/pages/UserHoards"));
-const UpdateHoard = React.lazy(() => import("./hoards/pages/UpdateHoard"));
 
 const Movie = React.lazy(() => import("./movies/pages/Movie"));
 const MovieResults = React.lazy(() => import("./movies/pages/MovieResults"));
@@ -59,17 +57,8 @@ const App = () => {
 				<Route path="/:userId/hoards" exact>
 					<UserHoards />
 				</Route>
-				<Route path="/reviews/:movieId/new" exact>
-					<NewReview />
-				</Route>
-				<Route path="/hoards/new" exact>
-					<NewHoard />
-				</Route>
-				<Route path="/reviews/:reviewId">
-					<UpdateReview />
-				</Route>
-				<Route path="/hoards/:hoardId">
-					<UpdateHoard />
+				<Route path="/hoards/:hoardId" exact>
+					<HoardReviews />
 				</Route>
 				<Redirect to="/" />
 			</Switch>
@@ -78,13 +67,13 @@ const App = () => {
 		routes = (
 			<Switch>
 				<Route path="/" exact>
-					<Reviews />
+					<Hoards />
 				</Route>
 				<Route path="/users" exact>
 					<Users />
 				</Route>
-				<Route path="/hoards" exact>
-					<Hoards />
+				<Route path="/reviews" exact>
+					<Reviews />
 				</Route>
 				<Route path="/movies/search/:title" exact>
 					<MovieResults />
@@ -97,6 +86,9 @@ const App = () => {
 				</Route>
 				<Route path="/:userId/hoards" exact>
 					<UserHoards />
+				</Route>
+				<Route path="/hoards/:hoardId" exact>
+					<HoardReviews />
 				</Route>
 				<Route path="/auth">
 					<Auth />
@@ -123,7 +115,7 @@ const App = () => {
 						<Suspense
 							fallback={
 								<div className="center">
-									<LoadingSpinner />
+									<CircularProgress />
 								</div>
 							}
 						>

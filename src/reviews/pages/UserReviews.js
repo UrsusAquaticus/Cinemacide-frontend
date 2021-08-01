@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { CircularProgress } from "@material-ui/core";
 
-import ErrorModal from "../../shared/components/UIElements/ErrorModal";
-import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
-
+import ReviewDialog from "../components/ReviewDialog";
 import ReviewList from "../components/ReviewList";
+import HoardSelectDialog from "../../shared/components/hoards/HoardSelectDialog";
+import HoardCreateDialog from "../../shared/components/hoards/HoardCreateDialog";
+
 import { useHttpClient } from "../../shared/hooks/http-hook";
 
 const UserReviews = () => {
@@ -25,25 +27,26 @@ const UserReviews = () => {
 		fetchReviews();
 	}, [sendRequest, userId]);
 
-	const reviewDeletedHandler = (deletedReviewId) => {
+	const reviewDeletedHandler = (deletedId) => {
 		setLoadedReviews((prevReviews) =>
-			prevReviews.filter((review) => review.id !== deletedReviewId)
+			prevReviews.filter((review) => review.id !== deletedId)
 		);
 	};
 
 	return (
 		<React.Fragment>
-			<ErrorModal error={error} onClear={clearError} />
-			{isLoading && (
-				<div className="center">
-					<LoadingSpinner />
-				</div>
-			)}
-			{!isLoading && loadedReviews && (
-				<ReviewList
-					items={loadedReviews}
-					onDeleteReview={reviewDeletedHandler}
-				/>
+			{isLoading && !loadedReviews && <CircularProgress />}
+			{loadedReviews && (
+				<HoardSelectDialog>
+					<HoardCreateDialog>
+						<ReviewDialog>
+							<ReviewList
+								onDelete={reviewDeletedHandler}
+								loadedReviews={loadedReviews}
+							/>
+						</ReviewDialog>
+					</HoardCreateDialog>
+				</HoardSelectDialog>
 			)}
 		</React.Fragment>
 	);

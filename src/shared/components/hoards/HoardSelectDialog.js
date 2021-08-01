@@ -1,24 +1,19 @@
-import React, { useState, useEffect, useContext } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
+import React, { useState, useContext } from "react";
 import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import PermMediaSharpIcon from "@material-ui/icons/PermMediaSharp";
 
-import PropTypes from "prop-types";
 import Avatar from "@material-ui/core/Avatar";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemText from "@material-ui/core/ListItemText";
-import PersonIcon from "@material-ui/icons/Person";
 import AddIcon from "@material-ui/icons/Add";
+import { Card } from "@material-ui/core";
 
-import { Divider, Typography, Slide, Badge } from "@material-ui/core";
-import { useHttpClient } from "../../shared/hooks/http-hook";
-import { AuthContext } from "../../shared/context/auth-context";
+import { Slide, Badge } from "@material-ui/core";
+import { useHttpClient } from "../../hooks/http-hook";
+import { AuthContext } from "../../context/auth-context";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
@@ -26,32 +21,40 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const HoardSelectDialog = (props) => {
 	const auth = useContext(AuthContext);
-	const [hoardOpen, setHoardOpen] = useState(false);
-	const [loadedHoards, setLoadedHoards] = useState();
+	const [selectOpen, setSelectOpen] = useState(false);
+	const [createOpen, setCreateOpen] = useState(false);
+	const [loadedHoards, setLoadedHoards] = useState([]);
 	const { isLoading, error, sendRequest, clearError } = useHttpClient();
 	const [selected, setSelected] = useState();
 
-	const handleHoardSelectOpen = (imdbID, Title, Poster) => {
-		const movie = {imdbID, Title, Poster};
+	const handleSelectOpen = (imdbID, Title, Poster) => {
+		const movie = { imdbID, Title, Poster };
 		setSelected(movie);
-		setHoardOpen(true);
+		setSelectOpen(true);
 		fetchHoards();
 	};
 
-	const handleHoardSelectClose = () => {
-		setHoardOpen(false);
+	const handleSelectClose = () => {
+		setSelectOpen(false);
 	};
 
-	const { children, ...newProps } = props;
-	const childProps = React.cloneElement(children, {
-		...newProps,
-		onHoardSelectOpen: handleHoardSelectOpen,
-	});
+	const handleCreateOpen = () => {
+		setCreateOpen(true);
+	};
+
+	const handleCreateClose = () => {
+		setCreateOpen(false);
+	};
 
 	const handleHoardSelect = (hid) => {
 		console.log(hid);
 		reviewSubmit(hid);
-		handleHoardSelectClose();
+		handleSelectClose();
+	};
+
+	const handleHoardCreate = (createdHoard) => {
+		setCreateOpen(false);
+		setLoadedHoards((prevHoards) => [...prevHoards, createdHoard]);
 	};
 
 	const fetchHoards = async () => {
@@ -67,6 +70,7 @@ const HoardSelectDialog = (props) => {
 
 	const reviewSubmit = async (hid) => {
 		try {
+			console.log(hid);
 			await sendRequest(
 				`${process.env.REACT_APP_BACKEND_URL}/reviews`,
 				"POST",
@@ -87,48 +91,55 @@ const HoardSelectDialog = (props) => {
 		} catch (err) {}
 	};
 
+	const { children, ...newProps } = props;
+	const childProps = React.cloneElement(children, {
+		...newProps,
+		onHoardSelectOpen: handleSelectOpen,
+		onCreate: handleHoardCreate,
+		onCreateClose: handleCreateClose,
+		createOpen,
+	});
+
 	return (
 		<React.Fragment>
 			{childProps}
 			<Dialog
-				open={hoardOpen}
+				open={selectOpen}
 				TransitionComponent={Transition}
 				keepMounted
-				onClose={handleHoardSelectClose}
+				onClose={handleSelectClose}
 			>
-				<DialogTitle>Select Hoard</DialogTitle>
+				<Card>
+					<DialogTitle>Select Hoard</DialogTitle>
+				</Card>
 				<List>
 					{loadedHoards &&
 						loadedHoards.map((hoard) => (
 							<ListItem
+								key={hoard.id}
 								button
 								onClick={() => {
 									handleHoardSelect(hoard.id);
 								}}
 							>
 								<ListItemAvatar>
-									<Badge badgeContent={hoard.reviews.count}>
+									<Badge color="secondary" badgeContent={hoard.reviews.length}>
 										<PermMediaSharpIcon />
 									</Badge>
 								</ListItemAvatar>
 								<ListItemText>{hoard.title}</ListItemText>
 							</ListItem>
 						))}
-
-					<ListItem autoFocus button>
-						<ListItemAvatar>
-							<Avatar>
-								<AddIcon />
-							</Avatar>
-						</ListItemAvatar>
-						<ListItemText
-							primary="New Hoard"
-							onClick={() => {
-								props.onHoardCreateOpen();
-							}}
-						/>
-					</ListItem>
 				</List>
+
+				<Card>
+					<ListItem autoFocus button onClick={handleCreateOpen}>
+						<ListItemAvatar>
+							<AddIcon />
+						</ListItemAvatar>
+						<ListItemText primary="New Hoard" />
+					</ListItem>
+				</Card>
 			</Dialog>
 		</React.Fragment>
 	);

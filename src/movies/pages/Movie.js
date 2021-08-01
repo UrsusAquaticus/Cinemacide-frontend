@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
-import ErrorModal from "../../shared/components/UIElements/ErrorModal";
-import Card from "../../shared/components/UIElements/Card";
+import { CircularProgress } from "@material-ui/core";
 
 import ReviewList from "../../reviews/components/ReviewList";
 import { useHttpClient } from "../../shared/hooks/http-hook";
@@ -55,37 +53,7 @@ const Movie = () => {
 
 	return (
 		<React.Fragment>
-			<ErrorModal error={error} onClear={clearError} />
-			{isLoading && (
-				<div className="center">
-					<LoadingSpinner />
-				</div>
-			)}
-
-			{!isLoading && !loadedMovie && (
-				<div className="center">
-					<Card>
-						<h2>Something went wrong.</h2>
-					</Card>
-				</div>
-			)}
-
-
-			{!isLoading && loadedReviews && (
-				<ReviewList
-					compact
-					items={loadedReviews}
-					onDeleteReview={reviewDeletedHandler}
-				/>
-			)}
-
-			{!isLoading && loadedMovie && !loadedReviews && (
-				<div className="center">
-					<Card>
-						<h2>Be the first to add a review!</h2>
-					</Card>
-				</div>
-			)}
+			
 		</React.Fragment>
 	);
 };

@@ -9,7 +9,8 @@ import HoardCreateDialog from "../../shared/components/hoards/HoardCreateDialog"
 
 import { useHttpClient } from "../../shared/hooks/http-hook";
 
-const Reviews = () => {
+const HoardReviews = () => {
+	const hoardId = useParams().hoardId;
 	const [loadedReviews, setLoadedReviews] = useState();
 	const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
@@ -17,7 +18,7 @@ const Reviews = () => {
 		const fetchReviews = async () => {
 			try {
 				const responseData = await sendRequest(
-					`${process.env.REACT_APP_BACKEND_URL}/reviews/`
+					`${process.env.REACT_APP_BACKEND_URL}/reviews/hoard/${hoardId}`
 				);
 				console.log(responseData.reviews);
 				setLoadedReviews(responseData.reviews);
@@ -26,29 +27,20 @@ const Reviews = () => {
 		fetchReviews();
 	}, [sendRequest]);
 
-	const reviewDeletedHandler = (deletedId) => {
-		setLoadedReviews((prevReviews) =>
-			prevReviews.filter((review) => review.id !== deletedId)
-		);
-	};
-
 	return (
 		<React.Fragment>
 			{isLoading && !loadedReviews && <CircularProgress />}
 			{loadedReviews && (
-				<HoardSelectDialog>
-					<HoardCreateDialog>
+				<HoardCreateDialog>
+					<HoardSelectDialog>
 						<ReviewDialog>
-							<ReviewList
-								onDelete={reviewDeletedHandler}
-								loadedReviews={loadedReviews}
-							/>
+							<ReviewList loadedReviews={loadedReviews} />
 						</ReviewDialog>
-					</HoardCreateDialog>
-				</HoardSelectDialog>
+					</HoardSelectDialog>
+				</HoardCreateDialog>
 			)}
 		</React.Fragment>
 	);
 };
 
-export default Reviews;
+export default HoardReviews;

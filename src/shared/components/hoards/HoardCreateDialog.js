@@ -1,19 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import React, { useState, useContext } from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-import PropTypes from "prop-types";
-import Avatar from "@material-ui/core/Avatar";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import ListItemText from "@material-ui/core/ListItemText";
-import PersonIcon from "@material-ui/icons/Person";
-import AddIcon from "@material-ui/icons/Add";
 import {
 	TextField,
 	FormGroup,
@@ -21,9 +12,9 @@ import {
 	Switch,
 } from "@material-ui/core";
 
-import { Divider, Typography, Slide, Badge } from "@material-ui/core";
-import { useHttpClient } from "../../shared/hooks/http-hook";
-import { AuthContext } from "../../shared/context/auth-context";
+import { Slide } from "@material-ui/core";
+import { useHttpClient } from "../../hooks/http-hook";
+import { AuthContext } from "../../context/auth-context";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
@@ -31,19 +22,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const HoardCreateDialog = (props) => {
 	const auth = useContext(AuthContext);
-	const [hoardOpen, setHoardOpen] = useState(false);
 	const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
 	const [title, setTitle] = useState("");
 	const [isPublic, setIsPublic] = useState(true);
-
-	const handleHoardCreateOpen = () => {
-		setHoardOpen(true);
-	};
-
-	const handleHoardCreateClose = () => {
-		setHoardOpen(false);
-	};
 
 	const handleTitleChange = (e) => {
 		setTitle(e.target.value);
@@ -56,13 +38,12 @@ const HoardCreateDialog = (props) => {
 	const { children, ...newProps } = props;
 	const childProps = React.cloneElement(children, {
 		...newProps,
-		onHoardCreateOpen: handleHoardCreateOpen,
 	});
 
-	const createSubmitHandler = async (event) => {
+	const HandleCreateSubmit = async (event) => {
 		event.preventDefault();
 		try {
-			const responseData = await sendRequest(
+			const response = await sendRequest(
 				`${process.env.REACT_APP_BACKEND_URL}/hoards/`,
 				"POST",
 				JSON.stringify({
@@ -74,7 +55,7 @@ const HoardCreateDialog = (props) => {
 					Authorization: "Bearer " + auth.token,
 				}
 			);
-			setHoardOpen(false);
+			props.onCreate(response.hoard);
 		} catch (err) {}
 	};
 
@@ -82,12 +63,12 @@ const HoardCreateDialog = (props) => {
 		<React.Fragment>
 			{childProps}
 			<Dialog
-				open={hoardOpen}
+				open={props.createOpen}
 				TransitionComponent={Transition}
-				onClose={handleHoardCreateClose}
+				onClose={props.onCreateClose}
 			>
 				<DialogTitle>Create Hoard</DialogTitle>
-				<form onSubmit={createSubmitHandler}>
+				<form onSubmit={HandleCreateSubmit}>
 					<DialogContent>
 						<FormGroup>
 							<TextField label="Title" onChange={handleTitleChange} />

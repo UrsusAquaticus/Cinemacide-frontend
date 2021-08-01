@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-
-import ErrorModal from "../../shared/components/UIElements/ErrorModal";
-import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
+import { useParams } from "react-router-dom";
+import { CircularProgress } from "@material-ui/core";
 
 import HoardList from "../components/HoardList";
+
 import { useHttpClient } from "../../shared/hooks/http-hook";
 
 const Hoards = () => {
+	const searchTitle = useParams().title;
 	const [loadedHoards, setLoadedHoards] = useState();
 	const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
@@ -16,32 +17,25 @@ const Hoards = () => {
 				const responseData = await sendRequest(
 					`${process.env.REACT_APP_BACKEND_URL}/hoards/`
 				);
-				console.log(responseData.hoards);
-				setLoadedHoards(responseData.hoards);
+
+				//console.log(responseData.hoards);
+				setLoadedHoards(responseData.hoards); // array of hoards
 			} catch (err) {}
 		};
 		fetchHoards();
-	}, [sendRequest]);
+	}, [sendRequest, searchTitle]);
 
-	const hoardDeletedHandler = (deletedHoardId) => {
+	const hoardDeletedHandler = (deletedId) => {
 		setLoadedHoards((prevHoards) =>
-			prevHoards.filter((hoard) => hoard.id !== deletedHoardId)
+			prevHoards.filter((hoard) => hoard.id !== deletedId)
 		);
 	};
 
 	return (
 		<React.Fragment>
-			<ErrorModal error={error} onClear={clearError} />
-			{isLoading && (
-				<div className="center">
-					<LoadingSpinner />
-				</div>
-			)}
-			{!isLoading && loadedHoards && (
-				<HoardList
-					items={loadedHoards}
-					onDeleteHoard={hoardDeletedHandler}
-				/>
+			{isLoading && !loadedHoards && <CircularProgress />}
+			{loadedHoards && (
+				<HoardList onDelete={hoardDeletedHandler} loadedHoards={loadedHoards} />
 			)}
 		</React.Fragment>
 	);

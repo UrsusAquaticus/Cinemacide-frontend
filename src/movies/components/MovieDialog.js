@@ -54,7 +54,30 @@ const MovieDialog = (props) => {
 				onClose={handleMovieClose}
 			>
 				{loadedMovie && (
-					<React.Fragment>
+					<React.Fragment
+						style={{
+							position: "relative",
+						}}
+					>
+						<Button
+							style={{
+								position: "absolute",
+								right: 0,
+								top: 0,
+								zIndex: 2,
+							}}
+							onClick={() => {
+								props.onHoardSelectOpen(
+									loadedMovie.imdbID,
+									loadedMovie.Title,
+									loadedMovie.Poster
+								);
+							}}
+							variant="contained"
+							color="Secondary"
+						>
+							Hoard
+						</Button>
 						<DialogTitle>
 							<Typography variant="h4" component="h2">
 								{loadedMovie.Title}
@@ -73,18 +96,6 @@ const MovieDialog = (props) => {
 							<Divider />
 							<Typography>{loadedMovie.Plot}</Typography>
 						</DialogContent>
-
-						<DialogActions>
-							<Button
-								onClick={() => {
-									props.onHoardSelectOpen(props.imdbID);
-								}}
-								variant="contained"
-								color="Secondary"
-							>
-								Hoard
-							</Button>
-						</DialogActions>
 					</React.Fragment>
 				)}
 			</Dialog>

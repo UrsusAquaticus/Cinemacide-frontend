@@ -1,9 +1,9 @@
 import React from "react";
 import { Box } from "@material-ui/core";
 
-import MovieItem from "./MovieItem";
+import UserItem from "./UserItem";
 
-const MovieList = (props) => {
+const UserList = (props) => {
 	return (
 		<Box
 			display="flex"
@@ -11,11 +11,11 @@ const MovieList = (props) => {
 			flexWrap="wrap"
 			justifyContent="center"
 		>
-			{props.loadedMovies.map((movie) => (
-				<MovieItem
-					key={movie.id}
-					{...movie}
-					onMovieOpen={props.onMovieOpen}
+			{props.loadedUsers.map((user) => (
+				<UserItem
+					key={user.id}
+					{...user}
+					onUserOpen={props.onUserOpen}
 					onHoardSelectOpen={props.onHoardSelectOpen}
 				/>
 			))}
@@ -23,4 +23,4 @@ const MovieList = (props) => {
 	);
 };
 
-export default MovieList;
+export default UserList;

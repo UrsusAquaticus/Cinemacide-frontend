@@ -1,15 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import ErrorModal from "../../shared/components/UIElements/ErrorModal";
-import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
-import Card from "../../shared/components/UIElements/Card";
-import TagImage from "../../shared/components/UIElements/TagImage";
-import { Link } from "react-router-dom";
+import { CircularProgress } from "@material-ui/core";
 
 import HoardList from "../components/HoardList";
 import { useHttpClient } from "../../shared/hooks/http-hook";
-import { AuthContext } from "../../shared/context/auth-context";
 
 const UserHoards = () => {
 	const userId = useParams().userId;
@@ -29,40 +24,17 @@ const UserHoards = () => {
 		fetchHoards();
 	}, [sendRequest, userId]);
 
-	const hoardDeletedHandler = (deletedHoardId) => {
+	const hoardDeletedHandler = (deletedId) => {
 		setLoadedHoards((prevHoards) =>
-			prevHoards.filter((hoard) => hoard.id !== deletedHoardId)
+			prevHoards.filter((hoard) => hoard.id !== deletedId)
 		);
 	};
 
 	return (
 		<React.Fragment>
-			<ErrorModal error={error} onClear={clearError} />
-			{isLoading && (
-				<div className="center">
-					<LoadingSpinner />
-				</div>
-			)}
-			{!isLoading && loadedHoards && (
-				<div className="card-list center">
-					<Card>
-						<Link
-							to={`/hoards/new/`}
-							style={{
-								textDecoration: "none",
-							}}
-						>
-							<TagImage
-								imgClass="invert"
-								tag="Create a new Hoard."
-								image="/svg/add-2.svg"
-							/>
-						</Link>
-					</Card>
-				</div>
-			)}
-			{!isLoading && loadedHoards && (
-				<HoardList items={loadedHoards} onDeleteHoard={hoardDeletedHandler} />
+			{isLoading && !loadedHoards && <CircularProgress />}
+			{loadedHoards && (
+				<HoardList onDelete={hoardDeletedHandler} loadedHoards={loadedHoards} />
 			)}
 		</React.Fragment>
 	);

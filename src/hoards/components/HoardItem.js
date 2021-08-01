@@ -1,26 +1,63 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
-import StarRating from "../../shared/components/UIElements/StarRating";
-import Button from "../../shared/components/FormElements/Button";
-import Modal from "../../shared/components/UIElements/Modal";
-import ErrorModal from "../../shared/components/UIElements/ErrorModal";
-import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
-import Attribute from "../../shared/components/UIElements/Attribute";
+import { makeStyles } from "@material-ui/core/styles";
+import Card from "@material-ui/core/Card";
+import CardActionArea from "@material-ui/core/CardActionArea";
+import CardContent from "@material-ui/core/CardContent";
+import Button from "@material-ui/core/Button";
+
+import Typography from "@material-ui/core/Typography";
+import { Box } from "@material-ui/core";
+import { Dialog } from "@material-ui/core";
+import { DialogTitle } from "@material-ui/core";
+import { DialogActions } from "@material-ui/core";
+
+import EditMenu from "../../shared/components/EditMenu";
+
+import ImageStack from "../../shared/components/ImageStack";
+
 import { AuthContext } from "../../shared/context/auth-context";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 
+const useStyles = makeStyles({
+	root: {
+		position: "relative",
+		margin: "0.5rem",
+		display: "flex",
+		flexDirection: "column",
+		justifyContent: "space-between",
+		transformOrigin: "center",
+		transition: "transform 0.15s ease-in-out",
+		"&:hover": { transform: "scale3d(1.01, 1.01, 1)" },
+	},
+	action: {
+		width: "15rem",
+	},
+});
+
 const HoardItem = (props) => {
 	const auth = useContext(AuthContext);
+	const classes = useStyles();
 	const [showConfirmModal, setShowConfirmModal] = useState(false);
 	const { isLoading, error, sendRequest, clearError } = useHttpClient();
+	const [loadedReviews, setLoadedReviews] = useState([]);
+	const [selectedId, setSelectedId] = useState();
 
-	const showDeleteWarningHandler = () => {
-		console.log();
+	const LinkRef = React.forwardRef((props, ref) => (
+		<div ref={ref}>
+			<NavLink exact {...props} />
+		</div>
+	));
+
+	const showDeleteWarningHandler = (hid) => {
+		setSelectedId(hid);
 		setShowConfirmModal(true);
 	};
 
 	const cancelDeleteHandler = () => {
+		setSelectedId();
 		setShowConfirmModal(false);
 	};
 
@@ -28,90 +65,75 @@ const HoardItem = (props) => {
 		setShowConfirmModal(false);
 		try {
 			await sendRequest(
-				`${process.env.REACT_APP_BACKEND_URL}/hoards/${props.id}`,
+				`${process.env.REACT_APP_BACKEND_URL}/hoards/${selectedId}`,
 				"DELETE",
 				null,
 				{
 					Authorization: "Bearer " + auth.token,
 				}
 			);
-			props.onDelete(props.id);
+			props.onDelete(selectedId);
 		} catch (err) {}
 	};
 
+	useEffect(() => {
+		const fetchReviews = async () => {
+			try {
+				let joinedIds = props.reviews.join("/");
+				const responseData = await sendRequest(
+					`${process.env.REACT_APP_BACKEND_URL}/reviews/multi/${joinedIds}`
+				);
+				console.log(responseData.reviews);
+				setLoadedReviews(responseData.reviews);
+			} catch (err) {}
+		};
+		fetchReviews();
+	}, [sendRequest, props]);
+
 	return (
 		<React.Fragment>
-			<ErrorModal error={error} onClear={clearError} />
-			<Modal
-				show={showConfirmModal}
-				onCancel={cancelDeleteHandler}
-				header="Are you sure?"
-				footerClass="card-item__modal-actions"
-				footer={
-					<React.Fragment>
-						<Button onClick={cancelDeleteHandler}>
-							CANCEL
-						</Button>
-						<Button danger onClick={confirmDeleteHandler}>
-							DELETE
-						</Button>
-					</React.Fragment>
-				}
+			<Dialog
+				open={showConfirmModal}
+				onClose={cancelDeleteHandler}
+				aria-labelledby="alert-dialog-title"
+				aria-describedby="alert-dialog-description"
 			>
-				<p>
-					Do you want to proceed and delete this hoard? Please note that it
-					can't be undone thereafter.
-				</p>
-			</Modal>
-			<li>
-				{isLoading && <LoadingSpinner asOverlay />}
-				<div className="card-item__header horizontal">
-					{!props.compact && (
-						<div className="card-item__image">
-							<Link to={`/movies/${props.imdbID}`}>
-								<img src={props.Poster} alt={props.Title} />
-							</Link>
-						</div>
-					)}
-					<div className="card-item__info vertical">
-						{!props.compact && (
-							<div className="horizontal bottom-line">
-								<h2>{props.Title}</h2>
-							</div>
-						)}
-						<StarRating stars={props.Rating} />
-						<div className="card-item__attributes">
-							<Attribute
-								className="divide"
-								attribute={new Date(props.Date).toDateString()}
-							/>
-							<Attribute
-								className="divide"
-								to={`/${props.Creator}/hoards`}
-								attribute={"By " + props.Username}
-							/>
-							{auth.userId === props.Creator && (
-								<Attribute
-									className="divide"
-									to={`/hoards/${props.id}`}
-									attribute={"Edit"}
-								/>
-							)}
-							{auth.userId === props.Creator && (
-								<Attribute
-									delete
-									className="divide"
-									onClick={showDeleteWarningHandler}
-									attribute={"Delete"}
-								/>
-							)}
-						</div>
-						<div className="card-item__body">
-							<Attribute attribute={props.Comment} />
-						</div>
-					</div>
-				</div>
-			</li>
+				<DialogTitle id="alert-dialog-title">{"Delete Hoard?"}</DialogTitle>
+				<DialogActions>
+					<Button onClick={cancelDeleteHandler} color="primary">
+						Cancel
+					</Button>
+					<Button onClick={confirmDeleteHandler} color="secondary" autoFocus>
+						Confirm
+					</Button>
+				</DialogActions>
+			</Dialog>
+
+			<Card className={classes.root} title={props.title}>
+				<EditMenu
+					onDelete={() => {
+						showDeleteWarningHandler(props.id);
+					}}
+				/>
+				<CardActionArea
+					button
+					className={classes.action}
+					component={LinkRef}
+					to={`/hoards/${props.id}`}
+				>
+					<CardContent>
+						<Typography noWrap variant="h5" component="h1">
+							{props.title}
+						</Typography>
+						<Box flexWrap="nowrap" flexDirection="row">
+							<Typography noWrap variant="subtitle1" component="h3">
+								{props.username + " | " + props.reviews.length}
+							</Typography>
+						</Box>
+					</CardContent>
+					<ImageStack loadedReviews={loadedReviews} />
+				</CardActionArea>
+			</Card>
 		</React.Fragment>
 	);
 };

@@ -1,13 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { CircularProgress } from "@material-ui/core";
 
-import UsersList from "../components/UsersList";
-import ErrorModal from "../../shared/components/UIElements/ErrorModal";
-import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
+import UserDialog from "../components/UserDialog";
+import UserList from "../components/UserList";
+import HoardSelectDialog from "../../shared/components/hoards/HoardSelectDialog";
+import HoardCreateDialog from "../../shared/components/hoards/HoardCreateDialog";
+
 import { useHttpClient } from "../../shared/hooks/http-hook";
 
 const Users = () => {
-	const { isLoading, error, sendRequest, clearError } = useHttpClient();
 	const [loadedUsers, setLoadedUsers] = useState();
+	const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
 	useEffect(() => {
 		const fetchUsers = async () => {
@@ -24,13 +28,16 @@ const Users = () => {
 
 	return (
 		<React.Fragment>
-			<ErrorModal error={error} onClear={clearError} />
-			{isLoading && (
-				<div className="center">
-					<LoadingSpinner />
-				</div>
+			{isLoading && !loadedUsers && <CircularProgress />}
+			{loadedUsers && (
+				<HoardCreateDialog>
+					<HoardSelectDialog>
+						<UserDialog>
+							<UserList loadedUsers={loadedUsers} />
+						</UserDialog>
+					</HoardSelectDialog>
+				</HoardCreateDialog>
 			)}
-			{!isLoading && loadedUsers && <UsersList items={loadedUsers} />}
 		</React.Fragment>
 	);
 };

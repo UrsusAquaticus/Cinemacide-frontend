@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
 		width: "auto",
 		"&.active": {
 			background: theme.palette.secondary.main,
-		  },
+		},
 	},
 }));
 
@@ -30,22 +30,22 @@ const NavLinks = (props) => {
 
 	return (
 		<React.Fragment>
-			{/* <ListItem
+			<ListItem
 				button
 				className={classes.navLinks}
 				component={LinkRef}
 				to="/users"
 			>
 				Users
-			</ListItem> */}
-			{/* <ListItem
+			</ListItem>
+			<ListItem
 				button
 				className={classes.navLinks}
 				component={LinkRef}
-				to="/hoards"
+				to="/"
 			>
 				Hoards
-			</ListItem> */}
+			</ListItem>
 			{auth.isLoggedIn && (
 				<ListItem
 					button
@@ -56,10 +56,15 @@ const NavLinks = (props) => {
 					My Hoards
 				</ListItem>
 			)}
-			{/* <ListItem button className={classes.navLinks} component={LinkRef} to="/">
+			<ListItem
+				button
+				className={classes.navLinks}
+				component={LinkRef}
+				to="/reviews"
+			>
 				Reviews
-			</ListItem> */}
-			{/* {auth.isLoggedIn && (
+			</ListItem>
+			{auth.isLoggedIn && (
 				<ListItem
 					button
 					className={classes.navLinks}
@@ -68,7 +73,7 @@ const NavLinks = (props) => {
 				>
 					My Reviews
 				</ListItem>
-			)} */}
+			)}
 			{!auth.isLoggedIn && (
 				<ListItem
 					button

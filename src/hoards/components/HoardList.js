@@ -1,41 +1,26 @@
 import React from "react";
+import { Box } from "@material-ui/core";
 
-import Card from "../../shared/components/UIElements/Card";
 import HoardItem from "./HoardItem";
-import "../../shared/components/UIElements/CardList.css";
 
 const HoardList = (props) => {
-	if (props.items.length === 0) {
-		return (
-			<div className="card-list center">
-				<Card>
-					<h2>No hoards found.</h2>
-				</Card>
-			</div>
-		);
-	}
-
 	return (
-		<ul className="card-list">
-			<Card className="card-item__content vertical">
-				{props.items.map((hoard) => (
-					<HoardItem
-						key={hoard.id}
-						id={hoard.id}
-						imdbID={hoard.imdbID}
-						Title={hoard.title}
-						Poster={hoard.poster}
-						Rating={hoard.rating}
-						Comment={hoard.comment}
-						Creator={hoard.creator}
-						Username={hoard.username}
-						Date={hoard.lastUpdateDate}
-						onDelete={props.onDeleteHoard}
-						compact={props.compact}
-					/>
-				))}
-			</Card>
-		</ul>
+		<Box
+			display="flex"
+			flexDirection="row"
+			flexWrap="wrap"
+			justifyContent="center"
+		>
+			{props.loadedHoards.map((hoard) => (
+				<HoardItem
+					key={hoard.id}
+					{...hoard}
+					onHoardOpen={props.onHoardOpen}
+					onHoardSelectOpen={props.onHoardSelectOpen}
+					onDelete={props.onDelete}
+				/>
+			))}
+		</Box>
 	);
 };
 

@@ -4,8 +4,8 @@ import { CircularProgress } from "@material-ui/core";
 
 import MovieDialog from "../components/MovieDialog";
 import MovieList from "../components/MovieList";
-import HoardSelectDialog from "../components/HoardSelectDialog";
-import HoardCreateDialog from "../components/HoardCreateDialog";
+import HoardSelectDialog from "../../shared/components/hoards/HoardSelectDialog";
+import HoardCreateDialog from "../../shared/components/hoards/HoardCreateDialog";
 
 import { useHttpClient } from "../../shared/hooks/http-hook";
 
@@ -32,13 +32,13 @@ const Movies = () => {
 		<React.Fragment>
 			{isLoading && !loadedMovies && <CircularProgress />}
 			{loadedMovies && (
-				<HoardCreateDialog>
-					<HoardSelectDialog>
+				<HoardSelectDialog>
+					<HoardCreateDialog>
 						<MovieDialog>
 							<MovieList loadedMovies={loadedMovies} />
 						</MovieDialog>
-					</HoardSelectDialog>
-				</HoardCreateDialog>
+					</HoardCreateDialog>
+				</HoardSelectDialog>
 			)}
 		</React.Fragment>
 	);
