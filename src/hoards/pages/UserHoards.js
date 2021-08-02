@@ -17,7 +17,6 @@ const UserHoards = () => {
 				const responseData = await sendRequest(
 					`${process.env.REACT_APP_BACKEND_URL}/hoards/user/${userId}`
 				);
-				console.log(responseData.hoards);
 				setLoadedHoards(responseData.hoards);
 			} catch (err) {}
 		};

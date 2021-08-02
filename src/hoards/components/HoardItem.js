@@ -83,7 +83,6 @@ const HoardItem = (props) => {
 				const responseData = await sendRequest(
 					`${process.env.REACT_APP_BACKEND_URL}/reviews/multi/${joinedIds}`
 				);
-				console.log(responseData.reviews);
 				setLoadedReviews(responseData.reviews);
 			} catch (err) {}
 		};
@@ -110,13 +109,14 @@ const HoardItem = (props) => {
 			</Dialog>
 
 			<Card className={classes.root} title={props.title}>
-				<EditMenu
-					onDelete={() => {
-						showDeleteWarningHandler(props.id);
-					}}
-				/>
+				{auth.userId === props.creator && (
+					<EditMenu
+						onDelete={() => {
+							showDeleteWarningHandler(props.id);
+						}}
+					/>
+				)}
 				<CardActionArea
-					button
 					className={classes.action}
 					component={LinkRef}
 					to={`/hoards/${props.id}`}

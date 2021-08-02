@@ -117,11 +117,13 @@ const ReviewItem = (props) => {
 				</DialogActions>
 			</Dialog>
 			<Card className={classes.root} title={props.title}>
-				<EditMenu
-					onDelete={() => {
-						showDeleteWarningHandler(props.id);
-					}}
-				/>
+				{auth.userId === props.creator && (
+					<EditMenu
+						onDelete={() => {
+							showDeleteWarningHandler(props.id);
+						}}
+					/>
+				)}
 				<CardActionArea
 					className={classes.area}
 					onClick={() => {

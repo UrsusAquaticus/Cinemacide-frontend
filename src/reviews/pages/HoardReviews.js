@@ -20,12 +20,11 @@ const HoardReviews = () => {
 				const responseData = await sendRequest(
 					`${process.env.REACT_APP_BACKEND_URL}/reviews/hoard/${hoardId}`
 				);
-				console.log(responseData.reviews);
 				setLoadedReviews(responseData.reviews);
 			} catch (err) {}
 		};
 		fetchReviews();
-	}, [sendRequest]);
+	}, [sendRequest, hoardId]);
 
 	return (
 		<React.Fragment>

@@ -17,8 +17,6 @@ const Hoards = () => {
 				const responseData = await sendRequest(
 					`${process.env.REACT_APP_BACKEND_URL}/hoards/`
 				);
-
-				//console.log(responseData.hoards);
 				setLoadedHoards(responseData.hoards); // array of hoards
 			} catch (err) {}
 		};

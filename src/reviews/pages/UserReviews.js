@@ -20,7 +20,6 @@ const UserReviews = () => {
 				const responseData = await sendRequest(
 					`${process.env.REACT_APP_BACKEND_URL}/reviews/user/${userId}`
 				);
-				console.log(responseData.reviews);
 				setLoadedReviews(responseData.reviews);
 			} catch (err) {}
 		};

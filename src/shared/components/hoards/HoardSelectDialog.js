@@ -46,9 +46,8 @@ const HoardSelectDialog = (props) => {
 		setCreateOpen(false);
 	};
 
-	const handleHoardSelect = (hid) => {
-		console.log(hid);
-		reviewSubmit(hid);
+	const handleHoardSelect = (hoard) => {
+		reviewSubmit(hoard.id);
 		handleSelectClose();
 	};
 
@@ -62,15 +61,12 @@ const HoardSelectDialog = (props) => {
 			const responseData = await sendRequest(
 				`${process.env.REACT_APP_BACKEND_URL}/hoards/user/${auth.userId}`
 			);
-
-			console.log(responseData.hoards);
 			setLoadedHoards(responseData.hoards); // array of hoard
 		} catch (err) {}
 	};
 
 	const reviewSubmit = async (hid) => {
 		try {
-			console.log(hid);
 			await sendRequest(
 				`${process.env.REACT_APP_BACKEND_URL}/reviews`,
 				"POST",
@@ -119,7 +115,7 @@ const HoardSelectDialog = (props) => {
 								key={hoard.id}
 								button
 								onClick={() => {
-									handleHoardSelect(hoard.id);
+									handleHoardSelect(hoard);
 								}}
 							>
 								<ListItemAvatar>

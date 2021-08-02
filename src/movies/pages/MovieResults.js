@@ -22,7 +22,6 @@ const Movies = () => {
 				);
 
 				setLoadedMovies(responseData.movie.Search); // array of movie
-				console.log(responseData);
 			} catch (err) {}
 		};
 		fetchMovies();

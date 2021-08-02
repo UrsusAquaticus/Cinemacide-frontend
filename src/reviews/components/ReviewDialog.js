@@ -34,7 +34,6 @@ const ReviewDialog = (props) => {
 				`${process.env.REACT_APP_BACKEND_URL}/reviews/${reviewId}`
 			);
 			setLoadedReview(responseData.review);
-			console.log(responseData.review);
 		} catch (err) {}
 	};
 

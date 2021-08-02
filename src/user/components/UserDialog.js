@@ -34,7 +34,6 @@ const UserDialog = (props) => {
 				`${process.env.REACT_APP_BACKEND_URL}/users/${userId}`
 			);
 			setLoadedUser(responseData.user);
-			console.log(responseData.user);
 		} catch (err) {}
 	};
 

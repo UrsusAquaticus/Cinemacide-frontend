@@ -19,7 +19,6 @@ const Reviews = () => {
 				const responseData = await sendRequest(
 					`${process.env.REACT_APP_BACKEND_URL}/reviews/`
 				);
-				console.log(responseData.reviews);
 				setLoadedReviews(responseData.reviews);
 			} catch (err) {}
 		};

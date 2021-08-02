@@ -34,7 +34,6 @@ const MovieDialog = (props) => {
 				`${process.env.REACT_APP_BACKEND_URL}/movies/${movieId}`
 			);
 			setLoadedMovie(responseData.movie);
-			console.log(responseData.movie);
 		} catch (err) {}
 	};
 

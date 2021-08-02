@@ -8,12 +8,12 @@ import EditIcon from "@material-ui/icons/Edit";
 import SendIcon from "@material-ui/icons/Send";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
-import { bindTrigger } from "material-ui-popup-state/hooks";
-
 import { Menu } from "@material-ui/core";
-import { bindMenu } from "material-ui-popup-state/core";
 import { MenuItem } from "@material-ui/core";
+
+import { bindMenu } from "material-ui-popup-state/core";
 import { usePopupState } from "material-ui-popup-state/hooks";
+import { bindTrigger } from "material-ui-popup-state/hooks";
 
 const useStyles = makeStyles({
 	menu: {
@@ -36,7 +36,7 @@ const EditMenu = (props) => {
 	const classes = useStyles();
 	const popupState = usePopupState({
 		variant: "popover",
-		popupId: "demoPopover",
+		popupId: "menuPopover",
 	});
 	return (
 		<React.Fragment>
@@ -58,14 +58,7 @@ const EditMenu = (props) => {
 				}}
 				className={classes.menu}
 				{...bindMenu(popupState)}
-				anchorOrigin={{
-					vertical: "bottom",
-					horizontal: "center",
-				}}
-				transformOrigin={{
-					vertical: "top",
-					horizontal: "center",
-				}}
+				transition
 			>
 				<MenuItem
 					className={classes.item}

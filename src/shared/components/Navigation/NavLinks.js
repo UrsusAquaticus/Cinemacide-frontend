@@ -1,8 +1,9 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { makeStyles, ListItem } from "@material-ui/core";
 
 import { AuthContext } from "../../context/auth-context";
+import AuthDialog from "./AuthDialog";
 
 const useStyles = makeStyles((theme) => ({
 	navLinks: {
@@ -21,6 +22,11 @@ const useStyles = makeStyles((theme) => ({
 const NavLinks = (props) => {
 	const auth = useContext(AuthContext);
 	const classes = useStyles();
+	const [authOpen, setAuthOpen] = useState(false);
+
+	const toggleAuthOpen = () => {
+		setAuthOpen(!authOpen);
+	};
 
 	const LinkRef = React.forwardRef((props, ref) => (
 		<div ref={ref}>
@@ -30,6 +36,7 @@ const NavLinks = (props) => {
 
 	return (
 		<React.Fragment>
+			<AuthDialog authOpen={authOpen} toggleAuthOpen={toggleAuthOpen} />
 			<ListItem
 				button
 				className={classes.navLinks}
@@ -38,12 +45,7 @@ const NavLinks = (props) => {
 			>
 				Users
 			</ListItem>
-			<ListItem
-				button
-				className={classes.navLinks}
-				component={LinkRef}
-				to="/"
-			>
+			<ListItem button className={classes.navLinks} component={LinkRef} to="/">
 				Hoards
 			</ListItem>
 			{auth.isLoggedIn && (
@@ -80,6 +82,10 @@ const NavLinks = (props) => {
 					className={classes.navLinks}
 					component={LinkRef}
 					to="/auth"
+					onClick={(e) => {
+						e.preventDefault();
+						toggleAuthOpen();
+					}}
 				>
 					Login
 				</ListItem>

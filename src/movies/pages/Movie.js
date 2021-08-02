@@ -21,7 +21,6 @@ const Movie = () => {
 				const responseArray = [];
 				responseArray.push(responseData.movie);
 				setLoadedMovie(responseArray);
-				console.log(responseArray);
 			} catch (err) {}
 		};
 		fetchMovie();
