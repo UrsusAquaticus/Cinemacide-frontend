@@ -11,8 +11,9 @@ const ReviewList = (props) => {
 			flexWrap="wrap"
 			justifyContent="center"
 		>
-			{props.loadedReviews.map((review) => (
+			{props.loadedReviews.map((review, index) => (
 				<ReviewItem
+					number={index}
 					key={review.id}
 					{...review}
 					onReviewOpen={props.onReviewOpen}

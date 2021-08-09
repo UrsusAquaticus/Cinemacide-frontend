@@ -13,9 +13,12 @@ import { DialogTitle } from "@material-ui/core";
 import { DialogActions } from "@material-ui/core";
 
 import EditMenu from "../../shared/components/EditMenu";
+import { Fade } from "@material-ui/core";
 
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
+
+import { useSnackbar } from "notistack";
 
 const useStyles = makeStyles({
 	root: {
@@ -26,16 +29,16 @@ const useStyles = makeStyles({
 
 		display: "flex",
 		flexWrap: "nowrap",
-
-		transformOrigin: "center",
-		transition: "transform 0.15s ease-in-out",
-		"&:hover": { transform: "scale3d(1.01, 1.01, 1)" },
 	},
 	area: {
 		height: "inherit",
 		display: "flex",
 		flexWrap: "nowrap",
 		justifyContent: "flex-start",
+
+		transformOrigin: "center",
+		transition: "transform 0.15s ease-in-out",
+		"&:hover": { transform: "scale3d(1.01, 1.01, 1)" },
 	},
 	imageContainer: {
 		height: "inherit",
@@ -69,9 +72,22 @@ const useStyles = makeStyles({
 const ReviewItem = (props) => {
 	const auth = useContext(AuthContext);
 	const classes = useStyles();
+	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 	const [showConfirmModal, setShowConfirmModal] = useState(false);
-	const { isLoading, error, sendRequest, clearError } = useHttpClient();
+	const {
+		isLoading: isDeleting,
+		error: deleteError,
+		sendRequest: sendDeleteRequest,
+		clearError: clearDeleteError,
+	} = useHttpClient();
+	const {
+		isLoading: isPatching,
+		error: patchError,
+		sendRequest: sendPatchRequest,
+		clearError: clearPatchError,
+	} = useHttpClient();
 	const [selectedId, setSelectedId] = useState();
+	const [rating, setRating] = useState(props.rating);
 
 	const showDeleteWarningHandler = (rid) => {
 		setSelectedId(rid);
@@ -83,10 +99,36 @@ const ReviewItem = (props) => {
 		setShowConfirmModal(false);
 	};
 
+	const reviewHandler = async (newValue) => {
+		console.log("Patch Start");
+		try {
+			await sendPatchRequest(
+				`${process.env.REACT_APP_BACKEND_URL}/reviews/${props.id}`,
+				"PATCH",
+				JSON.stringify({
+					rating: newValue,
+					comment: "",
+				}),
+				{
+					"Content-Type": "application/json",
+					Authorization: "Bearer " + auth.token,
+				}
+			);
+			enqueueSnackbar(
+				props.title +
+					(newValue ? " " + newValue + " Stars" : " Rating Removed"),
+				{ variant: "success" }
+			);
+			setRating(newValue);
+		} catch (err) {
+			enqueueSnackbar("Failed to Update: " + err.message, { variant: "error" });
+		}
+	};
+
 	const confirmDeleteHandler = async () => {
 		setShowConfirmModal(false);
 		try {
-			await sendRequest(
+			await sendDeleteRequest(
 				`${process.env.REACT_APP_BACKEND_URL}/reviews/${selectedId}`,
 				"DELETE",
 				null,
@@ -94,8 +136,15 @@ const ReviewItem = (props) => {
 					Authorization: "Bearer " + auth.token,
 				}
 			);
+			enqueueSnackbar("Review Deleted: ", {
+				variant: "success",
+			});
 			props.onDelete(selectedId);
-		} catch (err) {}
+		} catch (err) {
+			enqueueSnackbar("Failed to Delete Review: " + err.message, {
+				variant: "error",
+			});
+		}
 	};
 
 	return (
@@ -116,44 +165,63 @@ const ReviewItem = (props) => {
 					</Button>
 				</DialogActions>
 			</Dialog>
-			<Card className={classes.root} title={props.title}>
-				{auth.userId === props.creator && (
+			<Fade
+				in={true}
+				mountOnEnter
+				style={{ transitionDelay: props.number * 25 + "ms" }}
+			>
+				<Card className={classes.root} title={props.title}>
 					<EditMenu
+						visible={auth.userId === props.creator}
 						onDelete={() => {
 							showDeleteWarningHandler(props.id);
 						}}
 					/>
-				)}
-				<CardActionArea
-					className={classes.area}
-					onClick={() => {
-						props.onReviewOpen(props.imdbID);
-					}}
-				>
-					<div className={classes.imageContainer}>
-						<img
-							className={classes.image}
-							alt={props.title}
-							src={
-								props.poster === "N/A"
-									? "/NoImagePlaceholder.png"
-									: props.poster
-							}
-						/>
-					</div>
-					<CardContent>
-						<Typography
-							className={classes.text}
-							noWrap
-							variant="h5"
-							component="h1"
-						>
-							{props.title}
-						</Typography>
-						<Rating readOnly name="size-medium" defaultValue={props.rating} />
-					</CardContent>
-				</CardActionArea>
-			</Card>
+					<CardActionArea
+						className={classes.area}
+						onClick={() => {
+							props.onReviewOpen(props.imdbID);
+						}}
+					>
+						<div className={classes.imageContainer}>
+							<img
+								className={classes.image}
+								alt={props.title}
+								src={
+									props.poster === "N/A"
+										? "/NoImagePlaceholder.png"
+										: props.poster
+								}
+							/>
+						</div>
+						<CardContent>
+							<Typography
+								className={classes.text}
+								noWrap
+								variant="h5"
+								component="h1"
+							>
+								{props.title}
+							</Typography>
+							<Rating
+								name={props.id + "-rating"}
+								readOnly={auth.userId !== props.creator}
+								disabled={isPatching}
+								size="large"
+								value={rating}
+								defaultValue={props.rating}
+								onMouseOver={(e) => e.stopPropagation()}
+								onTouchStart={(e) => e.stopPropagation()}
+								onMouseDown={(e) => e.stopPropagation()}
+								onClick={(e) => e.stopPropagation()}
+								onChange={(event, newValue) => {
+									reviewHandler(newValue);
+								}}
+							/>
+						</CardContent>
+					</CardActionArea>
+				</Card>
+			</Fade>
 		</React.Fragment>
 	);
 };

@@ -11,8 +11,9 @@ const MovieList = (props) => {
 			flexWrap="wrap"
 			justifyContent="center"
 		>
-			{props.loadedMovies.map((movie) => (
+			{props.loadedMovies.map((movie, index) => (
 				<MovieItem
+					number={index}
 					key={movie.id}
 					{...movie}
 					onMovieOpen={props.onMovieOpen}

@@ -8,6 +8,8 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 
+import { Fade } from "@material-ui/core";
+
 import { AuthContext } from "../../shared/context/auth-context";
 
 const useStyles = makeStyles({
@@ -69,46 +71,52 @@ const MovieItem = (props) => {
 	const classes = useStyles();
 
 	return (
-		<Card className={classes.root} title={props.Title}>
-			<Button
-				className={classes.topRight}
-				onClick={() => {
-					props.onHoardSelectOpen(props.imdbID, props.Title, props.Poster);
-				}}
-				variant="contained"
-				color="Secondary"
-			>
-				Hoard
-			</Button>
-			<CardActionArea
-				className={classes.area}
-				onClick={() => {
-					props.onMovieOpen(props.imdbID);
-				}}
-			>
-				<CardMedia
-					className={classes.image}
-					component="img"
-					alt={props.Title}
-					image={
-						props.Poster === "N/A" ? "/NoImagePlaceholder.png" : props.Poster
-					}
-				/>
-				<CardContent className={classes.content}>
-					<Typography
-						className={classes.text}
-						noWrap
-						variant="h5"
-						component="h1"
-					>
-						{props.Title}
-					</Typography>
-					<Typography variant="body1" component="h2">
-						{capitalise(props.Type)} | {props.Year}
-					</Typography>
-				</CardContent>
-			</CardActionArea>
-		</Card>
+		<Fade
+			in={true}
+			mountOnEnter
+			style={{ transitionDelay: props.number * 25 + "ms" }}
+		>
+			<Card className={classes.root} title={props.Title}>
+				<Button
+					className={classes.topRight}
+					onClick={() => {
+						props.onHoardSelectOpen(props.imdbID, props.Title, props.Poster);
+					}}
+					variant="contained"
+					color="Secondary"
+				>
+					Hoard
+				</Button>
+				<CardActionArea
+					className={classes.area}
+					onClick={() => {
+						props.onMovieOpen(props.imdbID);
+					}}
+				>
+					<CardMedia
+						className={classes.image}
+						component="img"
+						alt={props.Title}
+						image={
+							props.Poster === "N/A" ? "/NoImagePlaceholder.png" : props.Poster
+						}
+					/>
+					<CardContent className={classes.content}>
+						<Typography
+							className={classes.text}
+							noWrap
+							variant="h5"
+							component="h1"
+						>
+							{props.Title}
+						</Typography>
+						<Typography variant="body1" component="h2">
+							{capitalise(props.Type)} | {props.Year}
+						</Typography>
+					</CardContent>
+				</CardActionArea>
+			</Card>
+		</Fade>
 	);
 };
 

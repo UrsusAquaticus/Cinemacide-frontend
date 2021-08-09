@@ -2,8 +2,6 @@ import React, { useState, useContext } from "react";
 
 import { Paper } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
-import { LockOutlined } from "@material-ui/icons";
-import { Typography } from "@material-ui/core";
 import { TextField } from "@material-ui/core";
 import { FormControlLabel } from "@material-ui/core";
 import { Checkbox } from "@material-ui/core";
@@ -15,14 +13,10 @@ import { Tabs } from "@material-ui/core";
 import { Tab } from "@material-ui/core";
 import { AppBar } from "@material-ui/core";
 
-import {
-	VALIDATOR_EMAIL,
-	VALIDATOR_MINLENGTH,
-	VALIDATOR_REQUIRE,
-} from "../../util/validators";
 import { useHttpClient } from "../../hooks/http-hook";
 import { AuthContext } from "../../context/auth-context";
-import { Avatar } from "@material-ui/core";
+
+import { useSnackbar } from "notistack";
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -67,12 +61,18 @@ const AuthDialog = (props) => {
 	const auth = useContext(AuthContext);
 	const [isLoginMode, setIsLoginMode] = useState(true);
 	const { isLoading, error, sendRequest, clearError } = useHttpClient();
+	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+	const [name, setName] = useState();
 	const [email, setEmail] = useState();
 	const [password, setPassword] = useState();
 	const [tabValue, setTabValue] = React.useState(0);
 
 	const handleTabChange = (event, newValue) => {
 		setTabValue(newValue);
+	};
+
+	const handleNameChange = (e) => {
+		setName(e.target.value);
 	};
 
 	const handleEmailChange = (e) => {
@@ -99,15 +99,28 @@ const AuthDialog = (props) => {
 						"Content-Type": "application/json",
 					}
 				);
-				auth.login(responseData.userId, responseData.token);
+				auth.login(
+					responseData.userId,
+					responseData.name,
+					responseData.image,
+					responseData.token
+				);
 				props.toggleAuthOpen();
-			} catch (err) {}
+				enqueueSnackbar("Login Success", {
+					variant: "success",
+				});
+			} catch (err) {
+				enqueueSnackbar("Login Failed: " + err.message, {
+					variant: "error",
+				});
+			}
 		} else {
 			try {
 				const responseData = await sendRequest(
 					`${process.env.REACT_APP_BACKEND_URL}/users/signup`,
 					"POST",
 					JSON.stringify({
+						name,
 						email,
 						password,
 					}),
@@ -116,8 +129,21 @@ const AuthDialog = (props) => {
 					}
 				);
 
-				auth.login(responseData.userId, responseData.token);
-			} catch (err) {}
+				auth.login(
+					responseData.userId,
+					responseData.name,
+					responseData.image,
+					responseData.token
+				);
+				props.toggleAuthOpen();
+				enqueueSnackbar("Sign Up Success", {
+					variant: "success",
+				});
+			} catch (err) {
+				enqueueSnackbar("Sign Up Failed: " + err.message, {
+					variant: "error",
+				});
+			}
 		}
 	};
 
@@ -138,7 +164,7 @@ const AuthDialog = (props) => {
 						centered
 					>
 						<Tab
-							label="Sign In"
+							label="Login"
 							onClick={() => {
 								setIsLoginMode(true);
 							}}
@@ -162,10 +188,10 @@ const AuthDialog = (props) => {
 								fullWidth
 								id="name"
 								label="Username"
-								name="username"
+								name="name"
 								autoComplete="none"
 								autoFocus={isLoginMode}
-								onInput={handleEmailChange}
+								onInput={handleNameChange}
 							/>
 						)}
 						<TextField
@@ -205,7 +231,7 @@ const AuthDialog = (props) => {
 							color="primary"
 							className={classes.submit}
 						>
-							Sign In
+							{isLoginMode ? "Login" : "Sign Up"}
 						</Button>
 					</form>
 				</Paper>

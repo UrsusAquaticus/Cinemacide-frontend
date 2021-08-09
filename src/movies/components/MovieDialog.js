@@ -9,6 +9,8 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import { Divider, Typography, Slide } from "@material-ui/core";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 
+import { useSnackbar } from "notistack";
+
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -17,6 +19,7 @@ const MovieDialog = (props) => {
 	const [movieOpen, setMovieOpen] = React.useState(false);
 	const [loadedMovie, setLoadedMovie] = useState();
 	const { isLoading, error, sendRequest, clearError } = useHttpClient();
+	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
 	const handleMovieOpen = (mid) => {
 		setMovieOpen(true);
@@ -34,7 +37,11 @@ const MovieDialog = (props) => {
 				`${process.env.REACT_APP_BACKEND_URL}/movies/${movieId}`
 			);
 			setLoadedMovie(responseData.movie);
-		} catch (err) {}
+		} catch (err) {
+			enqueueSnackbar("Failed to Fetch Movie: " + err.message, {
+				variant: "error",
+			});
+		}
 	};
 
 	const { children, ...newProps } = props;

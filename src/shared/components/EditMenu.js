@@ -40,36 +40,26 @@ const EditMenu = (props) => {
 	});
 	return (
 		<React.Fragment>
-			<IconButton
-				onTouchStart={(e) => e.stopPropagation()}
-				onMouseDown={(e) => e.stopPropagation()}
-				onClick={(e) => {
-					e.preventDefault();
-				}}
-				className={classes.topRight}
-				variant="contained"
-				{...bindTrigger(popupState)}
-			>
-				<MenuIcon />
-			</IconButton>
+			{props.visible && (
+				<IconButton
+					onMouseOver={(e) => e.stopPropagation()}
+					onTouchStart={(e) => e.stopPropagation()}
+					onMouseDown={(e) => e.stopPropagation()}
+					onClick={(e) => e.preventDefault()}
+					className={classes.topRight}
+					variant="contained"
+					{...bindTrigger(popupState)}
+				>
+					<MenuIcon />
+				</IconButton>
+			)}
 			<Menu
 				MenuListProps={{
 					disablePadding: true,
 				}}
 				className={classes.menu}
 				{...bindMenu(popupState)}
-				transition
 			>
-				<MenuItem
-					className={classes.item}
-					component={IconButton}
-					onClick={() => {
-						popupState.close();
-						props.onSend();
-					}}
-				>
-					<SendIcon />
-				</MenuItem>
 				<MenuItem
 					className={classes.item}
 					component={IconButton}

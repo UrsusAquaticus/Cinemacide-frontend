@@ -65,6 +65,7 @@ const SearchBar = () => {
 					root: classes.inputRoot,
 					input: classes.inputInput,
 				}}
+				required
 				placeholder="Search.."
 				inputProps={{ "aria-label": "search" }}
 				value={search}

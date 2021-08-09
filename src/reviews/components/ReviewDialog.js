@@ -9,6 +9,8 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import { Divider, Typography, Slide } from "@material-ui/core";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 
+import { useSnackbar } from "notistack";
+
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -17,6 +19,7 @@ const ReviewDialog = (props) => {
 	const [reviewOpen, setReviewOpen] = React.useState(false);
 	const [loadedReview, setLoadedReview] = useState();
 	const { isLoading, error, sendRequest, clearError } = useHttpClient();
+	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
 	const handleReviewOpen = (mid) => {
 		setReviewOpen(true);
@@ -34,7 +37,11 @@ const ReviewDialog = (props) => {
 				`${process.env.REACT_APP_BACKEND_URL}/reviews/${reviewId}`
 			);
 			setLoadedReview(responseData.review);
-		} catch (err) {}
+		} catch (err) {
+			enqueueSnackbar("Failed to Fetch Review: " + err.message, {
+				variant: "error",
+			});
+		}
 	};
 
 	const { children, ...newProps } = props;
@@ -61,8 +68,8 @@ const ReviewDialog = (props) => {
 						</DialogTitle>
 						<Divider />
 						<DialogContent>
-							{loadedReview.Rated} | {loadedReview.Runtime} | {loadedReview.Genre}{" "}
-							| {loadedReview.Released}
+							{loadedReview.Rated} | {loadedReview.Runtime} |{" "}
+							{loadedReview.Genre} | {loadedReview.Released}
 							<Divider />
 							<Typography>{loadedReview.Director}</Typography>
 							<Divider />

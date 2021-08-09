@@ -9,6 +9,8 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import { Divider, Typography, Slide } from "@material-ui/core";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 
+import { useSnackbar } from "notistack";
+
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -17,6 +19,7 @@ const UserDialog = (props) => {
 	const [userOpen, setUserOpen] = React.useState(false);
 	const [loadedUser, setLoadedUser] = useState();
 	const { isLoading, error, sendRequest, clearError } = useHttpClient();
+	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
 	const handleUserOpen = (mid) => {
 		setUserOpen(true);
@@ -34,7 +37,11 @@ const UserDialog = (props) => {
 				`${process.env.REACT_APP_BACKEND_URL}/users/${userId}`
 			);
 			setLoadedUser(responseData.user);
-		} catch (err) {}
+		} catch (err) {
+			enqueueSnackbar("Failed to Fetch User: " + err.message, {
+				variant: "error",
+			});
+		}
 	};
 
 	const { children, ...newProps } = props;
@@ -56,22 +63,11 @@ const UserDialog = (props) => {
 					<React.Fragment>
 						<DialogTitle>
 							<Typography variant="h4" component="h2">
-								{loadedUser.Title}
+								{loadedUser.name}
 							</Typography>
 						</DialogTitle>
 						<Divider />
-						<DialogContent>
-							{loadedUser.Rated} | {loadedUser.Runtime} | {loadedUser.Genre}{" "}
-							| {loadedUser.Released}
-							<Divider />
-							<Typography>{loadedUser.Director}</Typography>
-							<Divider />
-							<Typography>{loadedUser.Writer}</Typography>
-							<Divider />
-							<Typography>{loadedUser.Actors}</Typography>
-							<Divider />
-							<Typography>{loadedUser.Plot}</Typography>
-						</DialogContent>
+						<DialogContent></DialogContent>
 
 						<DialogActions>
 							<Button

@@ -1,31 +1,40 @@
 import React, { useContext } from "react";
+import { NavLink } from "react-router-dom";
+
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
-import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import { Box } from "@material-ui/core";
+
+import { Avatar } from "@material-ui/core";
+import { ListItem, ListItemText } from "@material-ui/core";
+import { ListItemIcon } from "@material-ui/core";
 
 import { AuthContext } from "../../shared/context/auth-context";
 
 const useStyles = makeStyles({
 	root: {
-		width: "15rem",
+		position: "relative",
 		margin: "0.5rem",
+
 		display: "flex",
-		flexDirection: "column",
-		justifyContent: "space-between",
+		flexWrap: "nowrap",
+
 		transformOrigin: "center",
 		transition: "transform 0.15s ease-in-out",
-		"&:hover": { transform: "scale3d(1.1, 1.1, 1)" },
+		"&:hover": { transform: "scale3d(1.01, 1.01, 1)" },
 	},
-	image: {
-		height: "15rem",
+	row: {
+		display: "flex",
 	},
 });
+
+const LinkRef = React.forwardRef((props, ref) => (
+	<div ref={ref}>
+		<NavLink exact {...props} />
+	</div>
+));
 
 const UserItem = (props) => {
 	const auth = useContext(AuthContext);
@@ -34,15 +43,18 @@ const UserItem = (props) => {
 	return (
 		<Card className={classes.root} title={props.name}>
 			<CardActionArea
+				component={LinkRef}
+				to={`/${props.userId}/hoards`}
 				onClick={() => {
 					props.onUserOpen(props.id);
 				}}
 			>
-				<CardContent>
-					<Typography noWrap variant="h5" component="h1">
-						{props.name}
-					</Typography>
-				</CardContent>
+				<ListItem>
+					<ListItemIcon>
+						<Avatar alt={props.name} src={props.image} />
+					</ListItemIcon>
+					<ListItemText primary={props.name} />
+				</ListItem>
 			</CardActionArea>
 		</Card>
 	);

@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { CardMedia } from "@material-ui/core";
-
+import { Fade } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
@@ -29,36 +29,66 @@ const useStyles = makeStyles({
 	image: { height: "inherit", width: "auto" },
 });
 
-const getRandom = (arr, n) => {
-	var result = new Array(n),
-		len = arr.length,
-		taken = new Array(len);
-	if (n > len) n = len;
-	while (n--) {
-		var x = Math.floor(Math.random() * len);
-		result[n] = arr[x in taken ? taken[x] : x];
-		taken[x] = --len in taken ? taken[len] : len;
-	}
-	return result;
-};
-
 const ImageStack = (props) => {
 	const classes = useStyles();
+	const [randomReviews, setRandomReviews] = useState();
+	const [count, setCount] = useState(1);
+
+	const checkLoaded = (totalCount, maxCount) => {
+		if (!props.isLoading) return;
+		const length = totalCount < maxCount ? totalCount : maxCount;
+		setCount(count + 1);
+		if (count >= length) {
+			props.onLoadComplete();
+		}
+	};
+
+	useEffect(() => {
+		const getRandom = () => {
+			let number = props.number;
+			let loadedReviews = props.loadedReviews;
+
+			var result = new Array(number),
+				len = loadedReviews.length,
+				taken = new Array(len);
+			if (len == 0) return;
+			if (number > len) number = len;
+			while (number--) {
+				var x = Math.floor(Math.random() * len);
+				result[number] = loadedReviews[x in taken ? taken[x] : x];
+				taken[x] = --len in taken ? taken[len] : len;
+			}
+			setRandomReviews(result);
+		};
+		getRandom();
+	}, []);
+
 	return (
-		<CardMedia className={classes.root}>
-			{props.loadedReviews &&
-				getRandom(props.loadedReviews, 5).map((review, index) => (
-					<div className={classes.imageContainer}>
-						<img
-							className={classes.image}
-							key={index}
-							alt={review.title}
-							src={
-								review.poster === "N/A"
-									? "/NoImagePlaceholder.png"
-									: review.poster
-							}
-						/>
+		<CardMedia
+			className={classes.root}
+			style={{
+				visibility: props.isLoading ? "hidden" : "visible",
+				position: props.isLoading ? "absolute" : "static",
+			}}
+		>
+			<div />
+			{randomReviews &&
+				randomReviews.map((review, index) => (
+					<div className={classes.imageContainer} key={review.id}>
+						<Fade in={!props.isLoading}>
+							<img
+								className={classes.image}
+								alt={review.title}
+								src={
+									review.poster === "N/A"
+										? "/NoImagePlaceholder.png"
+										: review.poster
+								}
+								onLoad={() => {
+									checkLoaded(props.loadedReviews.length, props.number);
+								}}
+							/>
+						</Fade>
 					</div>
 				))}
 		</CardMedia>

@@ -11,8 +11,9 @@ const HoardList = (props) => {
 			flexWrap="wrap"
 			justifyContent="center"
 		>
-			{props.loadedHoards.map((hoard) => (
+			{props.loadedHoards.map((hoard, index) => (
 				<HoardItem
+					number={index}
 					key={hoard.id}
 					{...hoard}
 					onHoardOpen={props.onHoardOpen}

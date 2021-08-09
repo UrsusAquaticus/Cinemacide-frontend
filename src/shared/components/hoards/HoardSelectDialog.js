@@ -1,9 +1,12 @@
 import React, { useState, useContext } from "react";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
+
+import VideoLibraryIcon from "@material-ui/icons/VideoLibrary";
 import PermMediaSharpIcon from "@material-ui/icons/PermMediaSharp";
 
-import Avatar from "@material-ui/core/Avatar";
+import { Fade } from "@material-ui/core";
+import { Skeleton } from "@material-ui/lab";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
@@ -15,6 +18,8 @@ import { Slide, Badge } from "@material-ui/core";
 import { useHttpClient } from "../../hooks/http-hook";
 import { AuthContext } from "../../context/auth-context";
 
+import { useSnackbar } from "notistack";
+
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -25,6 +30,7 @@ const HoardSelectDialog = (props) => {
 	const [createOpen, setCreateOpen] = useState(false);
 	const [loadedHoards, setLoadedHoards] = useState([]);
 	const { isLoading, error, sendRequest, clearError } = useHttpClient();
+	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 	const [selected, setSelected] = useState();
 
 	const handleSelectOpen = (imdbID, Title, Poster) => {
@@ -62,7 +68,11 @@ const HoardSelectDialog = (props) => {
 				`${process.env.REACT_APP_BACKEND_URL}/hoards/user/${auth.userId}`
 			);
 			setLoadedHoards(responseData.hoards); // array of hoard
-		} catch (err) {}
+		} catch (err) {
+			enqueueSnackbar("Failed to Fetch Hoards: " + err.message, {
+				variant: "error",
+			});
+		}
 	};
 
 	const reviewSubmit = async (hid) => {
@@ -84,7 +94,14 @@ const HoardSelectDialog = (props) => {
 					Authorization: "Bearer " + auth.token,
 				}
 			);
-		} catch (err) {}
+			enqueueSnackbar("Added to Hoard", {
+				variant: "success",
+			});
+		} catch (err) {
+			enqueueSnackbar("Failed to Add to Hoard: " + err.message, {
+				variant: "error",
+			});
+		}
 	};
 
 	const { children, ...newProps } = props;
@@ -105,35 +122,50 @@ const HoardSelectDialog = (props) => {
 				keepMounted
 				onClose={handleSelectClose}
 			>
-				<Card>
-					<DialogTitle>Select Hoard</DialogTitle>
+				<Card raised>
+					<DialogTitle>SELECT HOARD</DialogTitle>
 				</Card>
 				<List>
-					{loadedHoards &&
+					{loadedHoards.length > 0 &&
 						loadedHoards.map((hoard) => (
-							<ListItem
-								key={hoard.id}
-								button
-								onClick={() => {
-									handleHoardSelect(hoard);
-								}}
-							>
+							<Fade in={loadedHoards} key={hoard.id}>
+								<ListItem
+									button
+									onClick={() => {
+										handleHoardSelect(hoard);
+									}}
+								>
+									<ListItemAvatar>
+										<Badge
+											color="secondary"
+											badgeContent={hoard.reviews.length}
+										>
+											<VideoLibraryIcon />
+										</Badge>
+									</ListItemAvatar>
+									<ListItemText>{hoard.title}</ListItemText>
+								</ListItem>
+							</Fade>
+						))}
+					{isLoading &&
+						[...Array(3)].map((e, i) => (
+							<ListItem key={i}>
 								<ListItemAvatar>
-									<Badge color="secondary" badgeContent={hoard.reviews.length}>
-										<PermMediaSharpIcon />
-									</Badge>
+									<VideoLibraryIcon />
 								</ListItemAvatar>
-								<ListItemText>{hoard.title}</ListItemText>
+								<ListItemText>
+									<Skeleton />
+								</ListItemText>
 							</ListItem>
 						))}
 				</List>
 
-				<Card>
+				<Card raised>
 					<ListItem autoFocus button onClick={handleCreateOpen}>
 						<ListItemAvatar>
 							<AddIcon />
 						</ListItemAvatar>
-						<ListItemText primary="New Hoard" />
+						<ListItemText primary="NEW HOARD" />
 					</ListItem>
 				</Card>
 			</Dialog>

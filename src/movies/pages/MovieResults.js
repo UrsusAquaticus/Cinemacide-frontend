@@ -9,10 +9,13 @@ import HoardCreateDialog from "../../shared/components/hoards/HoardCreateDialog"
 
 import { useHttpClient } from "../../shared/hooks/http-hook";
 
+import { useSnackbar } from "notistack";
+
 const Movies = () => {
 	const searchTitle = useParams().title;
 	const [loadedMovies, setLoadedMovies] = useState();
 	const { isLoading, error, sendRequest, clearError } = useHttpClient();
+	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
 	useEffect(() => {
 		const fetchMovies = async () => {
@@ -22,7 +25,11 @@ const Movies = () => {
 				);
 
 				setLoadedMovies(responseData.movie.Search); // array of movie
-			} catch (err) {}
+			} catch (err) {
+				enqueueSnackbar("Failed to Fetch Movies: " + err.message, {
+					variant: "error",
+				});
+			}
 		};
 		fetchMovies();
 	}, [sendRequest, searchTitle]);

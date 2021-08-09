@@ -6,11 +6,14 @@ import { CircularProgress } from "@material-ui/core";
 import ReviewList from "../../reviews/components/ReviewList";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 
+import { useSnackbar } from "notistack";
+
 const Movie = () => {
 	const movieId = useParams().movieId;
 	const [loadedMovie, setLoadedMovie] = useState();
 	const [loadedReviews, setLoadedReviews] = useState();
 	const { isLoading, error, sendRequest, clearError } = useHttpClient();
+	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
 	useEffect(() => {
 		const fetchMovie = async () => {
@@ -21,7 +24,11 @@ const Movie = () => {
 				const responseArray = [];
 				responseArray.push(responseData.movie);
 				setLoadedMovie(responseArray);
-			} catch (err) {}
+			} catch (err) {
+				enqueueSnackbar("Failed to Fetch Movie: " + err.message, {
+					variant: "error",
+				});
+			}
 		};
 		fetchMovie();
 	}, [sendRequest, movieId]);
@@ -38,7 +45,11 @@ const Movie = () => {
 						true
 					);
 					setLoadedReviews(responseData.reviews);
-				} catch (err) {}
+				} catch (err) {
+					enqueueSnackbar("Failed to Fetch Reviews: " + err.message, {
+						variant: "error",
+					});
+				}
 			};
 			fetchReviews();
 		}
@@ -50,11 +61,7 @@ const Movie = () => {
 		);
 	};
 
-	return (
-		<React.Fragment>
-			
-		</React.Fragment>
-	);
+	return <React.Fragment></React.Fragment>;
 };
 
 export default Movie;

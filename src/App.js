@@ -9,7 +9,9 @@ import {
 import { ThemeProvider } from "@material-ui/styles";
 import { headerTheme } from "./themes";
 
-import PrimarySearchAppBar from "./shared/components/Navigation/PrimarySearchAppBar";
+import MainHeader from "./shared/components/Navigation/MainHeader";
+import { SnackbarProvider } from "notistack";
+
 import { CircularProgress } from "@material-ui/core";
 
 import { AuthContext } from "./shared/context/auth-context";
@@ -29,7 +31,7 @@ const Movie = React.lazy(() => import("./movies/pages/Movie"));
 const MovieResults = React.lazy(() => import("./movies/pages/MovieResults"));
 
 const App = () => {
-	const { token, login, logout, userId } = useAuth();
+	const { token, login, logout, userId, name, image } = useAuth();
 
 	let routes;
 
@@ -104,24 +106,28 @@ const App = () => {
 				isLoggedIn: !!token,
 				token: token,
 				userId: userId,
+				name: name,
+				image: image,
 				login: login,
 				logout: logout,
 			}}
 		>
 			<Router>
 				<ThemeProvider theme={headerTheme}>
-					<PrimarySearchAppBar />
-					<main>
-						<Suspense
-							fallback={
-								<div className="center">
-									<CircularProgress />
-								</div>
-							}
-						>
-							{routes}
-						</Suspense>
-					</main>
+					<SnackbarProvider maxSnack={3}>
+						<MainHeader />
+						<main>
+							<Suspense
+								fallback={
+									<div className="center">
+										<CircularProgress />
+									</div>
+								}
+							>
+								{routes}
+							</Suspense>
+						</main>
+					</SnackbarProvider>
 				</ThemeProvider>
 			</Router>
 		</AuthContext.Provider>

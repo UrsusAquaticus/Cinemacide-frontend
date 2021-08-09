@@ -9,9 +9,12 @@ import HoardCreateDialog from "../../shared/components/hoards/HoardCreateDialog"
 
 import { useHttpClient } from "../../shared/hooks/http-hook";
 
+import { useSnackbar } from "notistack";
+
 const Reviews = () => {
 	const [loadedReviews, setLoadedReviews] = useState();
 	const { isLoading, error, sendRequest, clearError } = useHttpClient();
+	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
 	useEffect(() => {
 		const fetchReviews = async () => {
@@ -20,7 +23,11 @@ const Reviews = () => {
 					`${process.env.REACT_APP_BACKEND_URL}/reviews/`
 				);
 				setLoadedReviews(responseData.reviews);
-			} catch (err) {}
+			} catch (err) {
+				enqueueSnackbar("Failed to Fetch Reviews: " + err.message, {
+					variant: "error",
+				});
+			}
 		};
 		fetchReviews();
 	}, [sendRequest]);

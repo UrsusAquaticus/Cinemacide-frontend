@@ -16,6 +16,8 @@ import { Slide } from "@material-ui/core";
 import { useHttpClient } from "../../hooks/http-hook";
 import { AuthContext } from "../../context/auth-context";
 
+import { useSnackbar } from "notistack";
+
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -23,6 +25,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const HoardCreateDialog = (props) => {
 	const auth = useContext(AuthContext);
 	const { isLoading, error, sendRequest, clearError } = useHttpClient();
+	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
 	const [title, setTitle] = useState("");
 	const [isPublic, setIsPublic] = useState(true);
@@ -56,7 +59,11 @@ const HoardCreateDialog = (props) => {
 				}
 			);
 			props.onCreate(response.hoard);
-		} catch (err) {}
+		} catch (err) {
+			enqueueSnackbar("Failed to Create Hoard: " + err.message, {
+				variant: "error",
+			});
+		}
 	};
 
 	return (

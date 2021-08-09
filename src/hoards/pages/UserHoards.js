@@ -6,10 +6,13 @@ import { CircularProgress } from "@material-ui/core";
 import HoardList from "../components/HoardList";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 
+import { useSnackbar } from "notistack";
+
 const UserHoards = () => {
 	const userId = useParams().userId;
 	const [loadedHoards, setLoadedHoards] = useState();
 	const { isLoading, error, sendRequest, clearError } = useHttpClient();
+	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
 	useEffect(() => {
 		const fetchHoards = async () => {
@@ -18,7 +21,11 @@ const UserHoards = () => {
 					`${process.env.REACT_APP_BACKEND_URL}/hoards/user/${userId}`
 				);
 				setLoadedHoards(responseData.hoards);
-			} catch (err) {}
+			} catch (err) {
+				enqueueSnackbar("Failed to Fetch Hoards: " + err.message, {
+					variant: "error",
+				});
+			}
 		};
 		fetchHoards();
 	}, [sendRequest, userId]);

@@ -6,9 +6,11 @@ import HoardList from "../components/HoardList";
 
 import { useHttpClient } from "../../shared/hooks/http-hook";
 
+import { useSnackbar } from "notistack";
+
 const Hoards = () => {
-	const searchTitle = useParams().title;
 	const [loadedHoards, setLoadedHoards] = useState();
+	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 	const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
 	useEffect(() => {
@@ -18,10 +20,14 @@ const Hoards = () => {
 					`${process.env.REACT_APP_BACKEND_URL}/hoards/`
 				);
 				setLoadedHoards(responseData.hoards); // array of hoards
-			} catch (err) {}
+			} catch (err) {
+				enqueueSnackbar("Failed to Fetch Hoards: " + err.message, {
+					variant: "error",
+				});
+			}
 		};
 		fetchHoards();
-	}, [sendRequest, searchTitle]);
+	}, [sendRequest]);
 
 	const hoardDeletedHandler = (deletedId) => {
 		setLoadedHoards((prevHoards) =>

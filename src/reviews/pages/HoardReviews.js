@@ -9,10 +9,13 @@ import HoardCreateDialog from "../../shared/components/hoards/HoardCreateDialog"
 
 import { useHttpClient } from "../../shared/hooks/http-hook";
 
+import { useSnackbar } from "notistack";
+
 const HoardReviews = () => {
 	const hoardId = useParams().hoardId;
 	const [loadedReviews, setLoadedReviews] = useState();
 	const { isLoading, error, sendRequest, clearError } = useHttpClient();
+	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
 	useEffect(() => {
 		const fetchReviews = async () => {
@@ -21,22 +24,35 @@ const HoardReviews = () => {
 					`${process.env.REACT_APP_BACKEND_URL}/reviews/hoard/${hoardId}`
 				);
 				setLoadedReviews(responseData.reviews);
-			} catch (err) {}
+			} catch (err) {
+				enqueueSnackbar("Failed to Fetch Reviews: " + err.message, {
+					variant: "error",
+				});
+			}
 		};
 		fetchReviews();
 	}, [sendRequest, hoardId]);
+
+	const reviewDeletedHandler = (deletedId) => {
+		setLoadedReviews((prevReviews) =>
+			prevReviews.filter((review) => review.id !== deletedId)
+		);
+	};
 
 	return (
 		<React.Fragment>
 			{isLoading && !loadedReviews && <CircularProgress />}
 			{loadedReviews && (
-				<HoardCreateDialog>
-					<HoardSelectDialog>
+				<HoardSelectDialog>
+					<HoardCreateDialog>
 						<ReviewDialog>
-							<ReviewList loadedReviews={loadedReviews} />
+							<ReviewList
+								onDelete={reviewDeletedHandler}
+								loadedReviews={loadedReviews}
+							/>
 						</ReviewDialog>
-					</HoardSelectDialog>
-				</HoardCreateDialog>
+					</HoardCreateDialog>
+				</HoardSelectDialog>
 			)}
 		</React.Fragment>
 	);
