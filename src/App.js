@@ -16,6 +16,7 @@ import { CircularProgress } from "@material-ui/core";
 
 import { AuthContext } from "./shared/context/auth-context";
 import { useAuth } from "./shared/hooks/auth-hook";
+import HeaderPadding from "./shared/components/Navigation/HeaderPadding";
 
 const Users = React.lazy(() => import("./user/pages/Users"));
 const Auth = React.lazy(() => import("./user/pages/Auth"));
@@ -124,6 +125,7 @@ const App = () => {
 									</div>
 								}
 							>
+								<HeaderPadding />
 								{routes}
 							</Suspense>
 						</main>

@@ -30,7 +30,7 @@ export default function MainHeader() {
 	return (
 		<header>
 			<div className={classes.grow}>
-				<AppBar position="static">
+				<AppBar elevation={5} position="fixed">
 					<Toolbar>
 						<NavMenu />
 						<Link className={classes.logoContainer} to="/">
