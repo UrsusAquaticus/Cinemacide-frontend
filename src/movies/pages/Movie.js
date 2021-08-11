@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import { CircularProgress } from "@material-ui/core";
-
 import ReviewList from "../../reviews/components/ReviewList";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 

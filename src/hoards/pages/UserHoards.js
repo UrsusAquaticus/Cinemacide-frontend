@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import { CircularProgress } from "@material-ui/core";
-
 import HoardList from "../components/HoardList";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 
@@ -38,7 +36,6 @@ const UserHoards = () => {
 
 	return (
 		<React.Fragment>
-			{isLoading && !loadedHoards && <CircularProgress />}
 			{loadedHoards && (
 				<HoardList onDelete={hoardDeletedHandler} loadedHoards={loadedHoards} />
 			)}

@@ -12,14 +12,14 @@ import { headerTheme } from "./themes";
 import MainHeader from "./shared/components/Navigation/MainHeader";
 import { SnackbarProvider } from "notistack";
 
-import { CircularProgress } from "@material-ui/core";
-
 import { AuthContext } from "./shared/context/auth-context";
 import { useAuth } from "./shared/hooks/auth-hook";
 import HeaderPadding from "./shared/components/Navigation/HeaderPadding";
+import DelayedFallback from "./shared/components/DelayedFallback";
+
+const Home = React.lazy(() => import("./home/pages/Home"));
 
 const Users = React.lazy(() => import("./user/pages/Users"));
-const Auth = React.lazy(() => import("./user/pages/Auth"));
 
 const Reviews = React.lazy(() => import("./reviews/pages/Reviews"));
 const UserReviews = React.lazy(() => import("./reviews/pages/UserReviews"));
@@ -40,7 +40,7 @@ const App = () => {
 		routes = (
 			<Switch>
 				<Route path="/" exact>
-					<Hoards />
+					<Home />
 				</Route>
 				<Route path="/hoards" exact>
 					<Hoards />
@@ -73,7 +73,7 @@ const App = () => {
 		routes = (
 			<Switch>
 				<Route path="/" exact>
-					<Hoards />
+					<Home />
 				</Route>
 				<Route path="/hoards" exact>
 					<Hoards />
@@ -100,7 +100,7 @@ const App = () => {
 					<HoardReviews />
 				</Route>
 				<Route path="/auth">
-					<Auth />
+					<Home showAuth />
 				</Route>
 				<Redirect to="/auth" />
 			</Switch>
@@ -123,17 +123,9 @@ const App = () => {
 				<ThemeProvider theme={headerTheme}>
 					<SnackbarProvider maxSnack={3}>
 						<MainHeader />
+						<HeaderPadding />
 						<main>
-							<Suspense
-								fallback={
-									<div className="center">
-										<CircularProgress />
-									</div>
-								}
-							>
-								<HeaderPadding />
-								{routes}
-							</Suspense>
+							<Suspense fallback={<DelayedFallback />}>{routes}</Suspense>
 						</main>
 					</SnackbarProvider>
 				</ThemeProvider>

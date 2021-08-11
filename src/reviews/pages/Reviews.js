@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { CircularProgress } from "@material-ui/core";
 
 import ReviewDialog from "../components/ReviewDialog";
 import ReviewList from "../components/ReviewList";
@@ -40,7 +39,6 @@ const Reviews = () => {
 
 	return (
 		<React.Fragment>
-			{isLoading && !loadedReviews && <CircularProgress />}
 			{loadedReviews && (
 				<HoardSelectDialog>
 					<HoardCreateDialog>

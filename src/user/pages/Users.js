@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { CircularProgress } from "@material-ui/core";
 
 import UserDialog from "../components/UserDialog";
 import UserList from "../components/UserList";
