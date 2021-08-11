@@ -42,6 +42,9 @@ const App = () => {
 				<Route path="/" exact>
 					<Hoards />
 				</Route>
+				<Route path="/hoards" exact>
+					<Hoards />
+				</Route>
 				<Route path="/users" exact>
 					<Users />
 				</Route>
@@ -70,6 +73,9 @@ const App = () => {
 		routes = (
 			<Switch>
 				<Route path="/" exact>
+					<Hoards />
+				</Route>
+				<Route path="/hoards" exact>
 					<Hoards />
 				</Route>
 				<Route path="/users" exact>
