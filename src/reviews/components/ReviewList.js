@@ -16,7 +16,7 @@ const ReviewList = (props) => {
 					number={index}
 					key={review.id}
 					{...review}
-					onReviewOpen={props.onReviewOpen}
+					onMovieOpen={props.onMovieOpen}
 					onHoardSelectOpen={props.onHoardSelectOpen}
 					onDelete={props.onDelete}
 				/>

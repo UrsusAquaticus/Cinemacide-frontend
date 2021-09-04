@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import MovieDialog from "../components/MovieDialog";
+import MovieDialog from "../../shared/components/MovieDialog";
 import MovieList from "../components/MovieList";
 import HoardSelectDialog from "../../shared/components/hoards/HoardSelectDialog";
 import HoardCreateDialog from "../../shared/components/hoards/HoardCreateDialog";

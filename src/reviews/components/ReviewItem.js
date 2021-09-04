@@ -180,7 +180,7 @@ const ReviewItem = (props) => {
 					<CardActionArea
 						className={classes.area}
 						onClick={() => {
-							props.onReviewOpen(props.imdbID);
+							props.onMovieOpen(props.imdbID);
 						}}
 					>
 						<div className={classes.imageContainer}>

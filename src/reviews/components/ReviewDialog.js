@@ -21,10 +21,10 @@ const ReviewDialog = (props) => {
 	const { isLoading, error, sendRequest, clearError } = useHttpClient();
 	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-	const handleReviewOpen = (mid) => {
+	const handleReviewOpen = (rid) => {
 		setReviewOpen(true);
 		setLoadedReview(null);
-		fetchReview(mid);
+		fetchReview(rid);
 	};
 
 	const handleReviewClose = () => {

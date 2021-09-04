@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
+import { Skeleton } from "@material-ui/lab";
+import { Fade } from "@material-ui/core";
+
 import { Divider, Typography, Slide } from "@material-ui/core";
-import { useHttpClient } from "../../shared/hooks/http-hook";
+import { useHttpClient } from "../hooks/http-hook";
 
 import { useSnackbar } from "notistack";
 
@@ -101,6 +102,40 @@ const MovieDialog = (props) => {
 							<Typography>{loadedMovie.Actors}</Typography>
 							<Divider />
 							<Typography>{loadedMovie.Plot}</Typography>
+						</DialogContent>
+					</React.Fragment>
+				)}
+				{!loadedMovie && (
+					<React.Fragment>
+						<DialogTitle>
+							<Typography variant="h4" component="h2">
+								<Skeleton />
+							</Typography>
+						</DialogTitle>
+						<Divider />
+						<DialogContent>
+							<Typography>
+								<Skeleton width={"35rem"}/>
+							</Typography>
+							<Divider />
+							<Typography>
+								<Skeleton />
+							</Typography>
+							<Divider />
+							<Typography>
+								<Skeleton />
+							</Typography>
+							<Divider />
+							<Typography>
+								<Skeleton />
+							</Typography>
+							<Divider />
+							<Typography>
+								<Skeleton />
+								<Skeleton />
+								<Skeleton />
+								<Skeleton />
+							</Typography>
 						</DialogContent>
 					</React.Fragment>
 				)}

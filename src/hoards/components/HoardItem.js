@@ -17,7 +17,6 @@ import { DialogActions } from "@material-ui/core";
 
 import { Skeleton } from "@material-ui/lab";
 import { Fade } from "@material-ui/core";
-import { Zoom } from "@material-ui/core";
 
 import EditMenu from "../../shared/components/EditMenu";
 

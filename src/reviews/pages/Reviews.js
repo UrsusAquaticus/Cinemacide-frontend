@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import ReviewDialog from "../components/ReviewDialog";
+import MovieDialog from "../../shared/components/MovieDialog";
 import ReviewList from "../components/ReviewList";
 import HoardSelectDialog from "../../shared/components/hoards/HoardSelectDialog";
 import HoardCreateDialog from "../../shared/components/hoards/HoardCreateDialog";
@@ -42,12 +42,12 @@ const Reviews = () => {
 			{loadedReviews && (
 				<HoardSelectDialog>
 					<HoardCreateDialog>
-						<ReviewDialog>
+						<MovieDialog>
 							<ReviewList
 								onDelete={reviewDeletedHandler}
 								loadedReviews={loadedReviews}
 							/>
-						</ReviewDialog>
+						</MovieDialog>
 					</HoardCreateDialog>
 				</HoardSelectDialog>
 			)}

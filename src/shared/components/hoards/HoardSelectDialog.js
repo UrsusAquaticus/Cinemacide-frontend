@@ -3,7 +3,6 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 import VideoLibraryIcon from "@material-ui/icons/VideoLibrary";
-import PermMediaSharpIcon from "@material-ui/icons/PermMediaSharp";
 
 import { Fade } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
@@ -17,6 +16,7 @@ import { Card } from "@material-ui/core";
 import { Slide, Badge } from "@material-ui/core";
 import { useHttpClient } from "../../hooks/http-hook";
 import { AuthContext } from "../../context/auth-context";
+import AuthDialog from "../Navigation/AuthDialog";
 
 import { useSnackbar } from "notistack";
 
@@ -34,10 +34,12 @@ const HoardSelectDialog = (props) => {
 	const [selected, setSelected] = useState();
 
 	const handleSelectOpen = (imdbID, Title, Poster) => {
-		const movie = { imdbID, Title, Poster };
-		setSelected(movie);
+		if (auth.isLoggedIn) {
+			const movie = { imdbID, Title, Poster };
+			setSelected(movie);
+			fetchHoards();
+		}
 		setSelectOpen(true);
-		fetchHoards();
 	};
 
 	const handleSelectClose = () => {
@@ -116,59 +118,65 @@ const HoardSelectDialog = (props) => {
 	return (
 		<React.Fragment>
 			{childProps}
-			<Dialog
-				open={selectOpen}
-				TransitionComponent={Transition}
-				keepMounted
-				onClose={handleSelectClose}
-			>
-				<Card raised>
-					<DialogTitle>SELECT HOARD</DialogTitle>
-				</Card>
-				<List>
-					{loadedHoards.length > 0 &&
-						loadedHoards.map((hoard) => (
-							<Fade in={loadedHoards} key={hoard.id}>
-								<ListItem
-									button
-									onClick={() => {
-										handleHoardSelect(hoard);
-									}}
-								>
+			{!auth.isLoggedIn && (
+				<AuthDialog authOpen={selectOpen} toggleAuthOpen={handleSelectClose} />
+			)}
+			{auth.isLoggedIn && (
+				<Dialog
+					open={selectOpen}
+					TransitionComponent={Transition}
+					keepMounted
+					onClose={handleSelectClose}
+				>
+					<Card raised>
+						<DialogTitle>SELECT HOARD</DialogTitle>
+					</Card>
+					<List>
+						{!isLoading &&
+							loadedHoards.length > 0 &&
+							loadedHoards.map((hoard) => (
+								<Fade in={loadedHoards} key={hoard.id}>
+									<ListItem
+										button
+										onClick={() => {
+											handleHoardSelect(hoard);
+										}}
+									>
+										<ListItemAvatar>
+											<Badge
+												color="secondary"
+												badgeContent={hoard.reviews.length}
+											>
+												<VideoLibraryIcon />
+											</Badge>
+										</ListItemAvatar>
+										<ListItemText>{hoard.title}</ListItemText>
+									</ListItem>
+								</Fade>
+							))}
+						{isLoading &&
+							[...Array(3)].map((e, i) => (
+								<ListItem key={i}>
 									<ListItemAvatar>
-										<Badge
-											color="secondary"
-											badgeContent={hoard.reviews.length}
-										>
-											<VideoLibraryIcon />
-										</Badge>
+										<VideoLibraryIcon />
 									</ListItemAvatar>
-									<ListItemText>{hoard.title}</ListItemText>
+									<ListItemText>
+										<Skeleton />
+									</ListItemText>
 								</ListItem>
-							</Fade>
-						))}
-					{isLoading &&
-						[...Array(3)].map((e, i) => (
-							<ListItem key={i}>
-								<ListItemAvatar>
-									<VideoLibraryIcon />
-								</ListItemAvatar>
-								<ListItemText>
-									<Skeleton />
-								</ListItemText>
-							</ListItem>
-						))}
-				</List>
+							))}
+					</List>
 
-				<Card raised>
-					<ListItem autoFocus button onClick={handleCreateOpen}>
-						<ListItemAvatar>
-							<AddIcon />
-						</ListItemAvatar>
-						<ListItemText primary="NEW HOARD" />
-					</ListItem>
-				</Card>
-			</Dialog>
+					<Card raised>
+						<ListItem autoFocus button onClick={handleCreateOpen}>
+							<ListItemAvatar>
+								<AddIcon />
+							</ListItemAvatar>
+							<ListItemText primary="NEW HOARD" />
+						</ListItem>
+					</Card>
+				</Dialog>
+			)}
 		</React.Fragment>
 	);
 };
