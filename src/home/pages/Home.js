@@ -80,18 +80,22 @@ const Home = (props) => {
 				!isLoading &&
 				loadedCards.map((card, ci) => (
 					<Card className={styles.card} id={"card-" + ci}>
+						{console.log(card.name)}
 						<Typography>{card.name}</Typography>
 						<a href={card.scryfall_uri}>
-							{card.card_faces ? (
+							{"image_uris" in card ? (
+								<img
+									className={styles.image}
+									src={card.image_uris.normal || "/"}
+								/>
+							) : (
 								card.card_faces.map((face, fi) => (
 									<img
 										className={styles.image}
 										id={"face-" + fi}
-										src={face.image_uris.normal}
+										src={face.image_uris.normal || "/"}
 									/>
 								))
-							) : (
-								<img className={styles.image} src={card.image_uris.normal} />
 							)}
 						</a>
 					</Card>
