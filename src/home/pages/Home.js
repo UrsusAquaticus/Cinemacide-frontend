@@ -5,6 +5,7 @@ import { Grid, Paper } from "@material-ui/core";
 import { Card } from "@material-ui/core";
 import { CardContent } from "@material-ui/core";
 import { Typography } from "@material-ui/core";
+import { Link } from "react-router-dom";
 
 // import AuthDialog from "../../shared/components/Navigation/AuthDialog";
 // import { AuthContext } from "../../shared/context/auth-context";
@@ -42,10 +43,20 @@ const Home = (props) => {
 							Temp Home Page
 						</Typography>
 						<Typography variant="subtitle1" component="h3">
+							Search media with the search bar
+						</Typography>
+						<Typography variant="subtitle1" component="h3">
 							Menu Top Left
 						</Typography>
 						<Typography variant="subtitle1" component="h3">
-							Search media with the search bar
+							<a href="github.com/UrsusAquaticus/Cinemacide-frontend">
+								Github Frontend
+							</a>
+						</Typography>
+						<Typography variant="subtitle1" component="h3">
+							<a href="github.com/UrsusAquaticus/Cinemacide-backend">
+								Github Backend
+							</a>
 						</Typography>
 					</CardContent>
 				</Card>
